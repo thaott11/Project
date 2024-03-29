@@ -41,9 +41,9 @@ namespace DuAn1_Coffe.BLL.Service
             }
         }
 
-        public List<KhachHang> Timkiem(string name)
+        public List<KhachHang> Timkiem(string ma)
         {
-            return KhachHangRepositoti.FindName(name);
+            return KhachHangRepositoti.FindName(ma);
         }
     }
 }

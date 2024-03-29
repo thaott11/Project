@@ -1,5 +1,6 @@
 ﻿using DuAn1_Coffe.BLL.Service;
 using DuAn1_Coffe.DAL.Models;
+using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,83 +16,122 @@ namespace DuAn1_Coffe.PRL.Forms
     public partial class Form_ThongKe : Form
     {
         SanPhamSer SanPhamService = new SanPhamSer();
+        HoaDonChiTietSer HoaDonChiTietSer = new HoaDonChiTietSer();
+        KhachHangSer KhachHangSer = new KhachHangSer();
+        HoaDonSer HoaDonSer = new HoaDonSer();
         public Form_ThongKe()
         {
             InitializeComponent();
-            LoatTop5SanPham();
-            loatSanPhamSapHet();
         }
 
-        public void LoatTop5SanPham()
+        private void Form_ThongKe_Load(object sender, EventArgs e)
+        {
+            LoadDoanhthuSp();
+        }
+        public void LoadDoanhthuSp()
         {
             int stt = 1;
-            List<SanPham> top5SanPham = SanPhamService.Allsanpham().OrderByDescending(sp => sp.SoLuong).Take(5).ToList();
-            dgvsanphambanchay.Columns.Clear();
-            dgvsanphambanchay.ColumnCount = 9;
-            dgvsanphambanchay.Columns[0].Name = "stt";
-            dgvsanphambanchay.Columns[1].Name = "Id";
-            dgvsanphambanchay.Columns[2].Name = "MaSP";
-            dgvsanphambanchay.Columns[3].Name = "tên";
-            dgvsanphambanchay.Columns[4].Name = "Giá Bán";
+            dgvdoanhthusp.ColumnCount = 7;
+            dgvdoanhthusp.Rows.Clear();
+            dgvdoanhthusp.Columns[0].Name = "Id";
+            dgvdoanhthusp.Columns[1].Name = "Stt";
+            dgvdoanhthusp.Columns[2].Name = "MaHD";
+            dgvdoanhthusp.Columns[3].Name = "Tên SP";
+            dgvdoanhthusp.Columns[4].Name = "Số Lượng";
+            dgvdoanhthusp.Columns[5].Name = "Tổng Giá";
+            dgvdoanhthusp.Columns[6].Name = "Ghi chú";
+            dgvdoanhthusp.Columns[0].Visible = false;
 
-            dgvsanphambanchay.Columns[5].Name = "Số Lượng";
-            dgvsanphambanchay.Columns[6].Name = "Trang Thái";
-            dgvsanphambanchay.Columns[7].Name = "Mô Tả";
-            dgvsanphambanchay.Columns[8].Name = "Hình Ảnh";
-            dgvsanphambanchay.Columns[1].Visible = false;
-
-            foreach (var item in top5SanPham)
+            foreach (var item in HoaDonChiTietSer.AllHoadonchitiet())
             {
-                dgvsanphambanchay.Rows.Add(stt++, item.Id, item.MaSp,
-                    item.TenSanPham, item.DonGia, item.SoLuong,
-                    item.TrangThai, item.MoTa, item.HinhAnh);
+
+                var hd = HoaDonSer.GetAllHD().FirstOrDefault(x => x.IdHd == item.IdHoaDon);
+                dgvdoanhthusp.Rows.Add(item.IdHoaDon, stt++, item.MaHoaDon, item.TenSanPham, item.SoLuong, item.TongGia, item.Ghichu);
+            }
+            lbdoanhthu.Text = HoaDonChiTietSer.AllHoadonchitiet().Sum(x => x.TongGia).ToString();
+        }
+        public void ThongKeSanPhamBanChay(DateTime ngayBatDau, DateTime ngayKetThuc)
+        {
+            int index = 0;
+            var thongkesanpham = (from hct in HoaDonChiTietSer.AllHoadonchitiet()
+                                  join hd in HoaDonSer.GetAllHD() on hct.IdHoaDon equals hd.IdHd
+                                  where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
+                                  group hct by hct.IdSanPham into g
+                                  select new
+                                  {
+                                      Masanpham = g.Key,
+                                      TenSP = g.Select(x => x.TenSanPham).FirstOrDefault(),
+                                      GiaBan = g.Select(x => x.TongGia).FirstOrDefault(),
+                                      SoLuotMua = g.Sum(x => x.SoLuong),
+                                      TongTien = g.Sum(x => x.SoLuong * x.TongGia),
+                                  }).OrderByDescending(x => x.SoLuotMua).ToList();
+            dgvspbanchay.DataSource = thongkesanpham;
+            dgvspbanchay.Columns[0].HeaderText = "Mã Sp";
+            dgvspbanchay.Columns[1].HeaderText = "Tên SP";
+            dgvspbanchay.Columns[2].HeaderText = "Giá bán";
+            dgvspbanchay.Columns[3].HeaderText = "Số lượt mua";
+            dgvspbanchay.Columns[4].HeaderText = "Tổng tiền";
+            // Tạo một DataGridViewImageColumn
+
+        }
+        public void ThongKeSanPhamSapHetHang(DateTime ngayBatDau, DateTime ngayKetThuc)
+        {
+            try
+            {
+                int index = 0;
+                var result = from sp in SanPhamService.Allsanpham()
+                             where sp.SoLuong < 10
+                             select new
+                             {
+                                 sp.Id,
+                                 stt = ++index,
+                                 sp.MaSp,
+                                 sp.TenSanPham,
+                                 sp.DonGia,
+                                 sp.SoLuong,
+                                 sp.TrangThai,
+                                 sp.MoTa,
+                                 sp.HinhAnh
+                             };
+                dgvsphethang.DataSource = result.ToList();
+                dgvsphethang.Columns[0].Visible = false;
+                dgvsphethang.Columns[1].HeaderText = "STT";
+                dgvsphethang.Columns[2].HeaderText = "Mã Sp";
+                dgvsphethang.Columns[3].HeaderText = "Tên sản phẩm";
+                dgvsphethang.Columns[4].HeaderText = "Đơn giá";
+                dgvsphethang.Columns[5].HeaderText = "Số lượng";
+                dgvsphethang.Columns[6].HeaderText = "Trạng thái";
+                dgvsphethang.Columns[7].HeaderText = "Mô tả";
+                dgvsphethang.Columns[8].HeaderText = "Hình ảnh";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
-        public void loatSanPhamSapHet()
+
+        private void btnThongKe_Click(object sender, EventArgs e)
         {
-            int stt = 1;
-            List<SanPham> sanPhamSapHetHang = SanPhamService.Allsanpham().Where(sp => sp.SoLuong < 10).ToList();
-            dgvsanphamhethang.Columns.Clear();
-            dgvsanphamhethang.ColumnCount = 10;
-            dgvsanphamhethang.Columns[0].Name = "stt";
-            dgvsanphamhethang.Columns[1].Name = "Id";
-            dgvsanphamhethang.Columns[2].Name = "MaSP";
-            dgvsanphamhethang.Columns[3].Name = "tên";
-            dgvsanphamhethang.Columns[4].Name = "Giá Bán";
+            DateTime ngayBatDau = dtptungay.Value.Date; // Lấy chỉ ngày, loại bỏ thông tin về giờ, phút và giây
+            DateTime ngayKetThuc = dtpDenNgay.Value.Date.AddDays(1).AddSeconds(-1); // Lấy ngày kết thúc và đặt giờ, phút và giây về 23:59:59
 
-            dgvsanphamhethang.Columns[6].Name = "Số Lượng";
-            dgvsanphamhethang.Columns[7].Name = "Trang Thái";
-            dgvsanphamhethang.Columns[8].Name = "Mô Tả";
-            dgvsanphamhethang.Columns[9].Name = "Hình Ảnh";
-            dgvsanphamhethang.Columns[1].Visible = false;
+            //Tổng sản phẩm
+            var tongsanpham = (from hct in HoaDonChiTietSer.AllHoadonchitiet()
+                               join hd in HoaDonSer.GetAllHD() on hct.IdHoaDon equals hd.IdHd
+                               where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
+                               select hct.SoLuong).Sum();
 
-            foreach (var item in sanPhamSapHetHang)
-            {
-                dgvsanphamhethang.Rows.Add(stt++, item.Id, item.MaSp,
-                    item.TenSanPham, item.DonGia, item.SoLuong,
-                    item.TrangThai, item.MoTa, item.HinhAnh);
-            }
-        }
+            //Tổng số đơn hàng 
+            var tongSoDonh = (from hd in HoaDonSer.GetAllHD()
+                              where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
+                              select hd).Count();
 
-        private void pnldoanhthu_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            Pen pen = new Pen(Color.Blue); // Màu của cột biểu đồ
-            int[,] doanhThuTheoNgay = (int[,])pnldoanhthu.Tag; // Lấy dữ liệu doanh thu từ Tag của biểu đồ
-            // Dữ liệu doanh thu (ví dụ)
-            int[] doanhThu = { 100, 200, 300, 400, 500 };
-            int barWidth = 30; // Độ rộng của mỗi cột
-            int spacing = 10; // Khoảng cách giữa các cột
-            int startX = 50; // Tọa độ X của điểm bắt đầu vẽ
-            int startY = pnldoanhthu.Height - 50; // Tọa độ Y của điểm bắt đầu vẽ
-            int maxValue = doanhThu.Max(); // Giá trị lớn nhất trong dữ liệu doanh thu
-            for (int i = 0; i < doanhThu.Length; i++)
-            {
-                int barHeight = (int)(((double)doanhThu[i] / maxValue) * (pnldoanhthu.Height - 100)); // Chiều cao của cột biểu đồ
-                Rectangle bar = new Rectangle(startX + i * (barWidth + spacing), startY - barHeight, barWidth, barHeight);
-                g.FillRectangle(Brushes.Blue, bar);
-                g.DrawRectangle(pen, bar);
-            }
+            //Hiển thị lên lable
+
+            lbspban.Text = tongsanpham.ToString();
+            lbtongdonhang.Text = tongSoDonh.ToString();
+            ThongKeSanPhamBanChay(ngayBatDau, ngayKetThuc);
+            ThongKeSanPhamSapHetHang(ngayBatDau, ngayKetThuc);
         }
     }
 }

@@ -48,58 +48,82 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             return Regex.IsMatch(mess, @"^[a-zA-Z0-9_-]+$");
         }
+        public bool Checksdt(string mess)
+        {
+            return Regex.IsMatch(mess, @"^\d{10}$");
+        }
 
         private void btn_themKH_Click(object sender, EventArgs e)
         {
-            KhachHang khachHang = new KhachHang();
-            khachHang.MaKh = txtmakh.Text;
-            khachHang.TenKh = txttenkh.Text;
-            khachHang.Sdt = txtsdt.Text;
-            khachHang.Diachi = txtdiachi.Text;
-            khachHang.GioiTinh = rbtNam.Checked ? "Nam" : "Nữ";
-            DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-            if (dr == DialogResult.Yes)
+            try
             {
-                KhachHangService.Them(khachHang);
-                LoadData();
+                if (string.IsNullOrEmpty(txtmakh.Text))
+                {
+                    MessageBox.Show("Không được để trống mã khách hàng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    bool check = KhachHangService.AllKhachHang().Any(x => x.MaKh == txtmakh.Text);
+                    if (check)
+                    {
+                        MessageBox.Show("Mã đã tồn tại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        KhachHang khachHang = new KhachHang();
+                        khachHang.MaKh = txtmakh.Text;
+                        khachHang.TenKh = txttenkh.Text;
+                        khachHang.Sdt = txtsdt.Text;
+                        khachHang.Diachi = txtdiachi.Text;
+                        khachHang.GioiTinh = rbtNam.Checked ? "Nam" : "Nữ";
+                        DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        if (dr == DialogResult.Yes)
+                        {
+                            KhachHangService.Them(khachHang);
+                            LoadData();
+                        }
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi rồi" + ex);
+            }
+
         }
 
         private void btn_suaKH_Click(object sender, EventArgs e)
         {
-            KhachHang khachHang = new KhachHang();
-            khachHang.MaKh = txtmakh.Text;
-            khachHang.TenKh = txttenkh.Text;
-            khachHang.Sdt = txtsdt.Text;
-            khachHang.Diachi = txtdiachi.Text;
-            khachHang.GioiTinh = rbtNam.Checked ? "Nam" : "Nữ";
-            DialogResult dr = MessageBox.Show("Bạn có muốn Sửa không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-            if (dr == DialogResult.Yes)
+            try
             {
-                KhachHangService.Sua(idWhenclick, khachHang);
-                LoadData();
+                {
+                    KhachHang khachHang = new KhachHang();
+                    khachHang.MaKh = txtmakh.Text;
+                    khachHang.TenKh = txttenkh.Text;
+                    khachHang.Sdt = txtsdt.Text;
+                    khachHang.Diachi = txtdiachi.Text;
+                    khachHang.GioiTinh = rbtNam.Checked ? "Nam" : "Nữ";
+                    DialogResult dr = MessageBox.Show("Bạn có muốn Sửa không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    if (dr == DialogResult.Yes)
+                    {
+                        KhachHangService.Sua(idWhenclick, khachHang);
+                        LoadData();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Có lỗi rồi" + ex);
             }
         }
 
         private void dgvkhachhang_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            int d = e.RowIndex;
-            idWhenclick = int.Parse(dgvkhachhang.Rows[d].Cells[0].Value.ToString());
-            txtmakh.Text = dgvkhachhang.Rows[d].Cells[2].Value.ToString();
-            txttenkh.Text = dgvkhachhang.Rows[d].Cells[3].Value.ToString();
-            txtsdt.Text = dgvkhachhang.Rows[d].Cells[4].Value.ToString();
-            txtdiachi.Text = dgvkhachhang.Rows[d].Cells[5].Value.ToString();
-            if (dgvkhachhang.Rows[d].Cells[6].Value.ToString().Equals("Nam"))
-            {
-                rbtNam.Checked = true;
-            }
-            else
-            {
-                rbtNu.Checked = true;
-            }
+
         }
 
-        public void Timkiem(string name)
+        public void Timkiem(string ma)
         {
             int stt = 1;
             dgvkhachhang.ColumnCount = 7;
@@ -113,7 +137,7 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvkhachhang.Columns[6].Name = "Giới tính";
             dgvkhachhang.Columns[0].Visible = false;
 
-            foreach (var item in KhachHangService.Timkiem(name))
+            foreach (var item in KhachHangService.Timkiem(ma))
             {
                 dgvkhachhang.Rows.Add(item.Id, stt++, item.MaKh, item.TenKh, item.Sdt, item.Diachi, item.GioiTinh);
             }
@@ -137,6 +161,42 @@ namespace DuAn1_Coffe.PRL.Forms
             txtdiachi.ResetText();
             rbtNam.Checked = false;
             rbtNu.Checked = false;
+        }
+
+        private void dgvkhachhang_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int d = e.RowIndex;
+            idWhenclick = int.Parse(dgvkhachhang.Rows[d].Cells[0].Value.ToString());
+            txtmakh.Text = dgvkhachhang.Rows[d].Cells[2].Value.ToString();
+            txttenkh.Text = dgvkhachhang.Rows[d].Cells[3].Value.ToString();
+            txtsdt.Text = dgvkhachhang.Rows[d].Cells[4].Value.ToString();
+            txtdiachi.Text = dgvkhachhang.Rows[d].Cells[5].Value.ToString();
+            var cell = dgvkhachhang.Rows[d].Cells[6].Value?.ToString(); // trả về null nếu ko có giá trị
+                                                                        // Kiểm tra nếu ô đó không có giá trị
+            if (cell == null || cell.ToString() == "")
+            {
+                rbtNam.Checked = false;
+                rbtNu.Checked = false;
+            }
+            else if (cell == "Nam")
+            {
+                rbtNam.Checked = true;
+            }
+            else
+            {
+                rbtNu.Checked = true;
+            }
+        }
+
+
+        private void Form_QuanLyKH_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtsdt_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

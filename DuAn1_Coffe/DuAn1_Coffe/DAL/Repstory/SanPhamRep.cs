@@ -38,9 +38,9 @@ namespace DuAn1_Coffe.DAL.Repstory
             return true;
         }
 
-        public List<SanPham> FindName(string name)
+        public List<SanPham> FindName(string ma)
         {
-            return db.SanPhams.Where(x => x.TenSanPham.ToLower().Contains(name.ToLower())).ToList();
+            return db.SanPhams.Where(x => x.MaSp.ToLower().Contains(ma.ToLower())).ToList();
         }
         public SanPham Findid(int id)
         {

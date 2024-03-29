@@ -1,5 +1,6 @@
 ﻿using DuAn1_Coffe.BLL.Service;
 using DuAn1_Coffe.DAL.Models;
+using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -99,11 +101,38 @@ namespace DuAn1_Coffe.PRL.Forms
                 }
             }
         }
-
+        public bool Checkint(string mess)
+        {
+            return Regex.IsMatch(mess, @"^\d+$");
+        }
         private void btn_themDU_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(pathimg))
-            {
+                if(string.IsNullOrEmpty(txttensp.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập tên sản phẩm","Thông báo",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtdongia.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập đơn giá", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtdongia.Text))
+                {
+                    MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtsoluong.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập số lượng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtsoluong.Text))
+                {
+                    MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(pathimg))
+                {
+                     MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm", "Thông báo");
+                }
+                else
+                {
                 bool check = sanPhamService.Allsanpham().Any(x => x.MaSp == txtmasp.Text);
                 if (check)
                 {
@@ -127,11 +156,7 @@ namespace DuAn1_Coffe.PRL.Forms
                         LoadData();
                     }
                 }
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm.", "Thông báo");
-            }
+            }               
         }
 
         private void btn_suaDU_Click(object sender, EventArgs e)
@@ -162,7 +187,7 @@ namespace DuAn1_Coffe.PRL.Forms
             }
         }
 
-        public void TimKiem(string name)
+        public void TimKiem(string ma)
         {
             int stt = 1;
             dgvsanpham.ColumnCount = 9;
@@ -177,7 +202,7 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvsanpham.Columns[7].Name = "Mô Tả";
             dgvsanpham.Columns[8].Name = "Hình Ảnh";
             dgvsanpham.Columns[0].Visible = false;
-            foreach (var item in sanPhamService.Timkiem(name))
+            foreach (var item in sanPhamService.Timkiem(ma))
             {
                 dgvsanpham.Rows.Add(item.Id, stt++, item.MaSp, item.TenSanPham, item.DonGia, item.SoLuong, item.TrangThai, item.MoTa, item.HinhAnh);
             }
@@ -220,7 +245,7 @@ namespace DuAn1_Coffe.PRL.Forms
         }
         private void cbolocDU_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbolocDU.SelectedIndex == 1)
+            if (cbolocDU.SelectedIndex == 0)
             {
                 Locc("Đang bán");
             }
@@ -233,6 +258,63 @@ namespace DuAn1_Coffe.PRL.Forms
         private void btn_LoadDU_Click(object sender, EventArgs e)
         {
             LoadData();
+        }
+
+
+
+        private void dgvsanpham_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            int d = e.RowIndex;
+            idWhenclick = int.Parse(dgvsanpham.Rows[d].Cells[0].Value.ToString());
+            txtmasp.Text = dgvsanpham.Rows[d].Cells[2].Value.ToString();
+            txttensp.Text = dgvsanpham.Rows[d].Cells[3].Value.ToString();
+            txtdongia.Text = dgvsanpham.Rows[d].Cells[4].Value.ToString();
+            txtsoluong.Text = dgvsanpham.Rows[d].Cells[5].Value.ToString();
+            txtmotaDU.Text = dgvsanpham.Rows[d].Cells[7].Value.ToString();
+            if (dgvsanpham.Rows[d].Cells[6].Value.ToString().Equals("Đang Bán"))
+            {
+                rbtdangbanDU.Checked = true;
+            }
+            else
+            {
+                rbtngungbanDU.Checked = true;
+            }
+            var s = sanPhamService.Findid(idWhenclick);
+            object img = s.HinhAnh;
+            imgLoad = s.HinhAnh;
+            byte[] imageData = (byte[])img;
+            Image image;
+            using (MemoryStream ms = new MemoryStream(imageData))
+            {
+                image = Image.FromStream(ms);
+            }
+            pbhinhanh.Image = image;
+        }
+
+        private void btn_qr_Click(object sender, EventArgs e)
+        {
+            QRCodeGenerator qrGenernator = new QRCodeGenerator();
+            QRCodeData qrCodedata = qrGenernator.CreateQrCode(txtmasp.Text, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrcode = new QRCode(qrCodedata);
+            Bitmap qrcodeImg = qrcode.GetGraphic(20);
+            pbhinhanh.Image = qrcodeImg;
+        }
+
+        private void btn_LuuQR_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog savefliedialog = new SaveFileDialog() { Filter = @"PNG|*.png" })
+            {
+                if (savefliedialog.ShowDialog() == DialogResult.OK)
+                {
+                    pbhinhanh.Image.Save(savefliedialog.FileName);
+                    MessageBox.Show("Tệp đã lưu");
+                }
+            }
+        }
+
+        private void Form_SanPham_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -16,9 +16,6 @@
     <Compile Update="PRL\Forms\Form_Menu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="PRL\Forms\Form_QRCode.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="PRL\Forms\Form_QuanLyHoaDon.cs">
       <SubType>Form</SubType>
     </Compile>

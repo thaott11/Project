@@ -57,10 +57,9 @@
             panelchucang.Controls.Add(label4);
             panelchucang.Controls.Add(pictureBox3);
             panelchucang.Dock = DockStyle.Fill;
-            panelchucang.Location = new Point(540, 66);
-            panelchucang.Margin = new Padding(5);
+            panelchucang.Location = new Point(332, 41);
             panelchucang.Name = "panelchucang";
-            panelchucang.Size = new Size(2024, 1493);
+            panelchucang.Size = new Size(1237, 693);
             panelchucang.TabIndex = 8;
             // 
             // label4
@@ -69,9 +68,10 @@
             label4.BackColor = Color.PeachPuff;
             label4.Font = new Font("Times New Roman", 24F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             label4.ForeColor = Color.Black;
-            label4.Location = new Point(2433, 2192);
+            label4.Location = new Point(1492, 1250);
+            label4.Margin = new Padding(2, 0, 2, 0);
             label4.Name = "label4";
-            label4.Size = new Size(697, 152);
+            label4.Size = new Size(429, 95);
             label4.TabIndex = 14;
             label4.Text = "Ngon đến giọt cuối cùng";
             // 
@@ -79,10 +79,10 @@
             // 
             pictureBox3.Anchor = AnchorStyles.None;
             pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(546, 363);
-            pictureBox3.Margin = new Padding(3, 5, 3, 5);
+            pictureBox3.Location = new Point(331, 107);
+            pictureBox3.Margin = new Padding(2, 3, 2, 3);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(817, 717);
+            pictureBox3.Size = new Size(503, 448);
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 10;
             pictureBox3.TabStop = false;
@@ -94,19 +94,18 @@
             panel2.Controls.Add(pictureBox2);
             panel2.Controls.Add(label3);
             panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(540, 0);
-            panel2.Margin = new Padding(5);
+            panel2.Location = new Point(332, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(2024, 66);
+            panel2.Size = new Size(1237, 41);
             panel2.TabIndex = 7;
             // 
             // pictureBox2
             // 
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(3, 0);
-            pictureBox2.Margin = new Padding(3, 5, 3, 5);
+            pictureBox2.Location = new Point(2, 0);
+            pictureBox2.Margin = new Padding(2, 3, 2, 3);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(81, 61);
+            pictureBox2.Size = new Size(50, 38);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 5;
             pictureBox2.TabStop = false;
@@ -117,9 +116,10 @@
             label3.BackColor = Color.LightGoldenrodYellow;
             label3.Font = new Font("Times New Roman", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             label3.ForeColor = Color.FromArgb(0, 0, 13, 38);
-            label3.Location = new Point(91, 14);
+            label3.Location = new Point(56, 9);
+            label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
-            label3.Size = new Size(310, 32);
+            label3.Size = new Size(196, 20);
             label3.TabIndex = 4;
             label3.Text = "TRANG CHỦ - ADMIN";
             // 
@@ -133,9 +133,8 @@
             panel1.Controls.Add(panel4);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
-            panel1.Margin = new Padding(5);
             panel1.Name = "panel1";
-            panel1.Size = new Size(540, 1559);
+            panel1.Size = new Size(332, 734);
             panel1.TabIndex = 6;
             // 
             // button1
@@ -143,10 +142,9 @@
             button1.BackColor = Color.DarkOrange;
             button1.Dock = DockStyle.Top;
             button1.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
-            button1.Location = new Point(0, 922);
-            button1.Margin = new Padding(5);
+            button1.Location = new Point(0, 577);
             button1.Name = "button1";
-            button1.Size = new Size(540, 174);
+            button1.Size = new Size(332, 109);
             button1.TabIndex = 9;
             button1.Text = "Log Out";
             button1.UseVisualStyleBackColor = false;
@@ -157,10 +155,9 @@
             btn_khachhang.BackColor = Color.DarkOrange;
             btn_khachhang.Dock = DockStyle.Top;
             btn_khachhang.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
-            btn_khachhang.Location = new Point(0, 748);
-            btn_khachhang.Margin = new Padding(5);
+            btn_khachhang.Location = new Point(0, 468);
             btn_khachhang.Name = "btn_khachhang";
-            btn_khachhang.Size = new Size(540, 174);
+            btn_khachhang.Size = new Size(332, 109);
             btn_khachhang.TabIndex = 5;
             btn_khachhang.Text = "Khách Hàng";
             btn_khachhang.UseVisualStyleBackColor = false;
@@ -171,10 +168,9 @@
             btn_hoadon.BackColor = Color.DarkOrange;
             btn_hoadon.Dock = DockStyle.Top;
             btn_hoadon.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
-            btn_hoadon.Location = new Point(0, 574);
-            btn_hoadon.Margin = new Padding(5);
+            btn_hoadon.Location = new Point(0, 359);
             btn_hoadon.Name = "btn_hoadon";
-            btn_hoadon.Size = new Size(540, 174);
+            btn_hoadon.Size = new Size(332, 109);
             btn_hoadon.TabIndex = 2;
             btn_hoadon.Text = "Hóa Đơn";
             btn_hoadon.UseVisualStyleBackColor = false;
@@ -185,10 +181,9 @@
             btn_banhang.BackColor = Color.DarkOrange;
             btn_banhang.Dock = DockStyle.Top;
             btn_banhang.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
-            btn_banhang.Location = new Point(0, 400);
-            btn_banhang.Margin = new Padding(5);
+            btn_banhang.Location = new Point(0, 250);
             btn_banhang.Name = "btn_banhang";
-            btn_banhang.Size = new Size(540, 174);
+            btn_banhang.Size = new Size(332, 109);
             btn_banhang.TabIndex = 1;
             btn_banhang.Text = "Bán Hàng";
             btn_banhang.UseVisualStyleBackColor = false;
@@ -199,30 +194,30 @@
             panel4.Controls.Add(pictureBox1);
             panel4.Dock = DockStyle.Top;
             panel4.Location = new Point(0, 0);
-            panel4.Margin = new Padding(5);
             panel4.Name = "panel4";
-            panel4.Size = new Size(540, 400);
+            panel4.Size = new Size(332, 250);
             panel4.TabIndex = 0;
             // 
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(34, 14);
-            pictureBox1.Margin = new Padding(3, 5, 3, 5);
+            pictureBox1.Location = new Point(21, 9);
+            pictureBox1.Margin = new Padding(2, 3, 2, 3);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(471, 355);
+            pictureBox1.Size = new Size(290, 222);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 8;
             pictureBox1.TabStop = false;
             // 
             // Form_NhanVien
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2564, 1559);
+            ClientSize = new Size(1569, 734);
             Controls.Add(panelchucang);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Margin = new Padding(2, 2, 2, 2);
             Name = "Form_NhanVien";
             Text = "Form2_NhanVien";
             panelchucang.ResumeLayout(false);

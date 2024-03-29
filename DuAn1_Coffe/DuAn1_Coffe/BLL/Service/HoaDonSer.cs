@@ -17,7 +17,17 @@ namespace DuAn1_Coffe.BLL.Service
         {
             return _ser.GetallHoaDon();
         }
-
+         public string Xoa(int id, HoaDon hoaDon)
+        {
+            if (_ser.Xoa(id, hoaDon))
+            {
+                return "Xóa thành công";
+            }
+            else
+            {
+                return "Xóa thất công";
+            }
+        }
         // seach mã hóa đơn
         public List<HoaDon> SeachMa(string ma)
         {

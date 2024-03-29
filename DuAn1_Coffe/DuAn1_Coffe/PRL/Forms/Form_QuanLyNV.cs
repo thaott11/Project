@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -94,23 +95,137 @@ namespace DuAn1_Coffe.PRL.Forms
                 }
             }
         }
-
+        public bool Checksdt(string mess)
+        {
+            return Regex.IsMatch(mess, @"^\d{10}$");
+        }
+        // check CCCD 12 số
+        public bool Checkcccd(string mess)
+        {
+            return Regex.IsMatch(mess, @"^\d{12}$");
+        }
         private void btn_themNV_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(pathimg))
+
+            if (string.IsNullOrEmpty(txttenNV.Text))
             {
-                bool check = NhanVienService.AllNhanVien().Any(x => x.MaNv == txtmanv.Text);
-                if (check)
+                MessageBox.Show("Bạn chưa nhập tên nhân viên", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txtSDT.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập SĐT", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!Checksdt(txtSDT.Text))
+            {
+                MessageBox.Show("Số điện thoại không đúng định dạng", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txtdiachi.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập địa chỉ", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txtCccd.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập cccd", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!Checkcccd(txtCccd.Text))
+            {
+                MessageBox.Show("Chưa đúng số cccd", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txttentk.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập tên tài khoản", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txtmatkhau.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập mật khẩu", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(pathimg))
+            {
+                MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm.", "Thông báo");
+            }
+             else{
+                    bool check = NhanVienService.AllNhanVien().Any(x => x.MaNv == txtmanv.Text);
+                    if (check)
+                    {
+                        MessageBox.Show("Mã đã tồn tại");
+                    }
+                    else
+                    {
+                        DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        if (dr == DialogResult.Yes)
+                        {
+                            byte[] imageBytes = File.ReadAllBytes(pathimg);
+                            NhanVien nhanVien = new NhanVien();
+                            nhanVien.MaNv = txtmanv.Text;
+                            nhanVien.TenNv = txttenNV.Text;
+                            nhanVien.GioiTinh = rdoNam.Checked ? "Nam" : "Nữ";
+                            nhanVien.Sdt = txtSDT.Text;
+                            nhanVien.DiaChi = txtdiachi.Text;
+                            nhanVien.Cccd = txtCccd.Text;
+                            nhanVien.VaiTro = rdoNhanvien.Checked ? "Nhân viên" : "Quản lý";
+                            nhanVien.TenTaiKhoan = txttentk.Text;
+                            nhanVien.MatKhau = txtmatkhau.Text;
+                            nhanVien.NgayVaoLam = DateTime.ParseExact(dtpNgayvaolam.Text.Trim(), "dd/MM/yyyy", null);
+                            nhanVien.TrangThai = rbtdanglam.Checked ? "Đang làm" : "Nghỉ làm";
+                            if (pathimg == null) nhanVien.HinhAnh = imgLoad;
+                            nhanVien.HinhAnh = imageBytes;
+                            MessageBox.Show(NhanVienService.Them(nhanVien));
+                            LoadData();
+                        }
+                    }
+                }
+            }
+
+        private void btn_suaNV_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (string.IsNullOrEmpty(txttenNV.Text))
                 {
-                    MessageBox.Show("Mã đã tồn tại");
+                    MessageBox.Show("Bạn chưa nhập tên nhân viên", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtSDT.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập SĐT", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checksdt(txtSDT.Text))
+                {
+                    MessageBox.Show("Số điện thoại không đúng định dạng", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtdiachi.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập địa chỉ", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtCccd.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập cccd", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkcccd(txtCccd.Text))
+                {
+                    MessageBox.Show("Chưa đúng số cccd", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txttentk.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập tên tài khoản", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtmatkhau.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập mật khẩu", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    DialogResult dr = MessageBox.Show("Bạn có muốn sửa không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                     if (dr == DialogResult.Yes)
                     {
-                        byte[] imageBytes = File.ReadAllBytes(pathimg);
+
                         NhanVien nhanVien = new NhanVien();
+                        if (pathimg != null)
+                        {
+                            byte[] imageBytes = File.ReadAllBytes(pathimg);
+                            nhanVien.HinhAnh = imageBytes;
+                        }
+                        else nhanVien.HinhAnh = imgLoad;
                         nhanVien.MaNv = txtmanv.Text;
                         nhanVien.TenNv = txttenNV.Text;
                         nhanVien.GioiTinh = rdoNam.Checked ? "Nam" : "Nữ";
@@ -122,49 +237,10 @@ namespace DuAn1_Coffe.PRL.Forms
                         nhanVien.MatKhau = txtmatkhau.Text;
                         nhanVien.NgayVaoLam = DateTime.ParseExact(dtpNgayvaolam.Text.Trim(), "dd/MM/yyyy", null);
                         nhanVien.TrangThai = rbtdanglam.Checked ? "Đang làm" : "Nghỉ làm";
-                        if (pathimg == null) nhanVien.HinhAnh = imgLoad;
-                        nhanVien.HinhAnh = imageBytes;
-                        MessageBox.Show(NhanVienService.Them(nhanVien));
+
+                        MessageBox.Show(NhanVienService.Sua(idwhenclick, nhanVien));
                         LoadData();
                     }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm.", "Thông báo");
-            }
-
-        }
-
-        private void btn_suaNV_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DialogResult dr = MessageBox.Show("Bạn có muốn sửa không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (dr == DialogResult.Yes)
-                {
-
-                    NhanVien nhanVien = new NhanVien();
-                    if (pathimg != null)
-                    {
-                        byte[] imageBytes = File.ReadAllBytes(pathimg);
-                        nhanVien.HinhAnh = imageBytes;
-                    }
-                    else nhanVien.HinhAnh = imgLoad;
-                    nhanVien.MaNv = txtmanv.Text;
-                    nhanVien.TenNv = txttenNV.Text;
-                    nhanVien.GioiTinh = rdoNam.Checked ? "Nam" : "Nữ";
-                    nhanVien.Sdt = txtSDT.Text;
-                    nhanVien.DiaChi = txtdiachi.Text;
-                    nhanVien.Cccd = txtCccd.Text;
-                    nhanVien.VaiTro = rdoNhanvien.Checked ? "Nhân viên" : "Quản lý";
-                    nhanVien.TenTaiKhoan = txttentk.Text;
-                    nhanVien.MatKhau = txtmatkhau.Text;
-                    nhanVien.NgayVaoLam = DateTime.ParseExact(dtpNgayvaolam.Text.Trim(), "dd/MM/yyyy", null);
-                    nhanVien.TrangThai = rbtdanglam.Checked ? "Đang làm" : "Nghỉ làm";
-
-                    MessageBox.Show(NhanVienService.Sua(idwhenclick, nhanVien));
-                    LoadData();
                 }
             }
             catch (Exception ex)
@@ -308,7 +384,7 @@ namespace DuAn1_Coffe.PRL.Forms
 
         private void cbolocDU_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cbolocDU.SelectedIndex == 1)
+            if (cbolocDU.SelectedIndex == 1)
             {
                 Locc("Quản Lý");
             }
@@ -316,6 +392,61 @@ namespace DuAn1_Coffe.PRL.Forms
             {
                 Locc("Nhân Viên");
             }
+        }
+
+        private void dgvnhanvien_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int d = e.RowIndex;
+            idwhenclick = int.Parse(dgvnhanvien.Rows[d].Cells[0].Value.ToString());
+            txtmanv.Text = dgvnhanvien.Rows[d].Cells[2].Value.ToString();
+            txttenNV.Text = dgvnhanvien.Rows[d].Cells[3].Value.ToString();
+
+            if (dgvnhanvien.Rows[d].Cells[4].Value.ToString().Equals("Nam"))
+            {
+                rdoNam.Checked = true;
+            }
+            else
+            {
+                rdonu.Checked = true;
+            }
+            txtSDT.Text = dgvnhanvien.Rows[d].Cells[5].Value.ToString();
+            txtdiachi.Text = dgvnhanvien.Rows[d].Cells[6].Value.ToString();
+            txtCccd.Text = dgvnhanvien.Rows[d].Cells[7].Value.ToString();
+            if (dgvnhanvien.Rows[d].Cells[8].Value.ToString().Equals("Quản Lý", StringComparison.OrdinalIgnoreCase))
+            {
+
+                rdoquanly.Checked = true;
+            }
+            else
+            {
+                rdoNhanvien.Checked = true;
+            }
+            txttentk.Text = dgvnhanvien.Rows[d].Cells[9].Value.ToString();
+            txtmatkhau.Text = dgvnhanvien.Rows[d].Cells[10].Value.ToString();
+            dtpNgayvaolam.Text = dgvnhanvien.Rows[d].Cells[11].Value.ToString();
+            if (dgvnhanvien.Rows[d].Cells[12].Value.ToString().Equals("Đang Làm", StringComparison.OrdinalIgnoreCase))
+            {
+                rbtdanglam.Checked = true;
+            }
+            else
+            {
+                rbtnghilam.Checked = true;
+            }
+            var s = NhanVienService.Findid(idwhenclick);
+            object img = s.HinhAnh;
+            imgLoad = s.HinhAnh;
+            byte[] imageData = (byte[])img;
+            Image image;
+            using (MemoryStream ms = new MemoryStream(imageData))
+            {
+                image = Image.FromStream(ms);
+            }
+            pbhinhanh.Image = image;
+        }
+
+        private void Form_QuanLyNV_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

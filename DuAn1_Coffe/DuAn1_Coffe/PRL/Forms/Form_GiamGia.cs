@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,7 +22,10 @@ namespace DuAn1_Coffe.PRL.Forms
             InitializeComponent();
             LoadDataGG();
         }
+        private void Form_GiamGia_Load(object sender, EventArgs e)
+        {
 
+        }
         public void LoadDataGG()
         {
             int STT = 1;
@@ -44,7 +48,7 @@ namespace DuAn1_Coffe.PRL.Forms
                 dgvgiamgia.Rows.Add(item.Id, STT++, item.MaGiamGia, item.NgayBatDau, item.NgayKetThuc, item.TiLeGiam, item.DonHangToiThieu, item.GiamToiDa, item.SoLuong);
             }
         }
-        private void dgvgiamgia_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvgiamgia_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
@@ -62,31 +66,73 @@ namespace DuAn1_Coffe.PRL.Forms
                 txtSoLuong.Text = selectedRow.Cells[8].Value.ToString();
             }
         }
-
+        public bool CheckGiagiam(string gia)
+        {
+            return Regex.IsMatch(gia, @"^(?:\d{1,2}|100)$");
+        }
+        public bool Checkint(string Mess)
+        {
+            return Regex.IsMatch(Mess, @"^\d+$");
+        }
         private void btn_themGG_Click(object sender, EventArgs e)
         {
             try
             {
-                bool check = GiamGiaService.AllGiamGia().Any(x => x.MaGiamGia == txtMaGiamGia.Text);
-                if (check)
+                if (string.IsNullOrEmpty(txtMaGiamGia.Text))
                 {
-                    MessageBox.Show("Mã đã tồn tại");
+                    MessageBox.Show("Không được để trống mã giảm giá", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if(!CheckGiagiam(txtTiLeGiam.Text))
+                {
+                    MessageBox.Show("giá giảm <= 100", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtDonToiThieu.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập đơn hàng tối thiểu", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtDonToiThieu.Text))
+                {
+                    MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtGiamToiDa.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập giảm tối đa", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtGiamToiDa.Text))
+                {
+                    MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtSoLuong.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập số lượng", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtSoLuong.Text))
+                {
+                    MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                    if (dr == DialogResult.Yes)
+                    bool check = GiamGiaService.AllGiamGia().Any(x => x.MaGiamGia == txtMaGiamGia.Text);
+                    if (check)
                     {
-                        GiamGium giamGia = new GiamGium();
-                        giamGia.MaGiamGia = txtMaGiamGia.Text;
-                        giamGia.NgayBatDau = Convert.ToDateTime(dtpNgayBatDau.Value.ToString());
-                        giamGia.NgayKetThuc = Convert.ToDateTime(dtpNgayKetThuc.Value.ToString());
-                        giamGia.TiLeGiam = int.Parse(txtTiLeGiam.Text);
-                        giamGia.DonHangToiThieu = int.Parse(txtDonToiThieu.Text);
-                        giamGia.GiamToiDa = int.Parse(txtGiamToiDa.Text);
-                        giamGia.SoLuong = int.Parse(txtSoLuong.Text);
-                        MessageBox.Show(GiamGiaService.Them(giamGia));
-                        LoadDataGG();
+                        MessageBox.Show("Mã đã tồn tại");
+                    }
+                    else
+                    {
+                        DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        if (dr == DialogResult.Yes)
+                        {
+                            GiamGium giamGia = new GiamGium();
+                            giamGia.MaGiamGia = txtMaGiamGia.Text;
+                            giamGia.NgayBatDau = Convert.ToDateTime(dtpNgayBatDau.Value.ToString());
+                            giamGia.NgayKetThuc = Convert.ToDateTime(dtpNgayKetThuc.Value.ToString());
+                            giamGia.TiLeGiam = int.Parse(txtTiLeGiam.Text);
+                            giamGia.DonHangToiThieu = int.Parse(txtDonToiThieu.Text);
+                            giamGia.GiamToiDa = int.Parse(txtGiamToiDa.Text);
+                            giamGia.SoLuong = int.Parse(txtSoLuong.Text);
+                            MessageBox.Show(GiamGiaService.Them(giamGia));
+                            LoadDataGG();
+                        }
                     }
                 }
             }
@@ -100,20 +146,54 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             try
             {
-
-                DialogResult dr = MessageBox.Show("Bạn có muốn sửa không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (dr == DialogResult.Yes)
+                if (string.IsNullOrEmpty(txtMaGiamGia.Text))
                 {
-                    GiamGium giamGia = new GiamGium();
-                    giamGia.MaGiamGia = txtMaGiamGia.Text;
-                    giamGia.NgayBatDau = DateTime.ParseExact(dtpNgayBatDau.Text.Trim(), "dd/MM/yyyy", null);
-                    giamGia.NgayKetThuc = DateTime.ParseExact(dtpNgayKetThuc.Text.Trim(), "dd/MM/yyyy", null);
-                    giamGia.TiLeGiam = int.Parse(txtTiLeGiam.Text);
-                    giamGia.DonHangToiThieu = int.Parse(txtDonToiThieu.Text);
-                    giamGia.GiamToiDa = int.Parse(txtGiamToiDa.Text);
-                    giamGia.SoLuong = int.Parse(txtSoLuong.Text);
-                    MessageBox.Show(GiamGiaService.Sua(idwhenclick, giamGia));
-                    LoadDataGG();
+                    MessageBox.Show("Không được để trống mã giảm giá", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!CheckGiagiam(txtTiLeGiam.Text))
+                {
+                    MessageBox.Show("giá giảm <= 100", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtDonToiThieu.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập đơn hàng tối thiểu", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtDonToiThieu.Text))
+                {
+                    MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtGiamToiDa.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập giảm tối đa", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtGiamToiDa.Text))
+                {
+                    MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtSoLuong.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập số lượng", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkint(txtSoLuong.Text))
+                {
+                    MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    DialogResult dr = MessageBox.Show("Bạn có muốn sửa không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    if (dr == DialogResult.Yes)
+                    {
+                        GiamGium giamGia = new GiamGium();
+                        giamGia.MaGiamGia = txtMaGiamGia.Text;
+                        giamGia.NgayBatDau = DateTime.ParseExact(dtpNgayBatDau.Text.Trim(), "dd/MM/yyyy", null);
+                        giamGia.NgayKetThuc = DateTime.ParseExact(dtpNgayKetThuc.Text.Trim(), "dd/MM/yyyy", null);
+                        giamGia.TiLeGiam = int.Parse(txtTiLeGiam.Text);
+                        giamGia.DonHangToiThieu = int.Parse(txtDonToiThieu.Text);
+                        giamGia.GiamToiDa = int.Parse(txtGiamToiDa.Text);
+                        giamGia.SoLuong = int.Parse(txtSoLuong.Text);
+                        MessageBox.Show(GiamGiaService.Sua(idwhenclick, giamGia));
+                        LoadDataGG();
+                    }
                 }
             }
             catch (Exception ex)
@@ -163,5 +243,9 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             Timkiem(txtTimKiem.Text);
         }
+
+
+
+  
     }
 }

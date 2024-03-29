@@ -12,7 +12,7 @@ namespace DuAn1_Coffe.DAL.Models
 
         public int IdHd { get; set; }
         public string MaHd { get; set; } = null!;
-        public DateTime? NgayMuaHang { get; set; }
+        public DateTime NgayMuaHang { get; set; }
         public string? TrangThai { get; set; }
         public string? NguoiTao { get; set; }
         public int? IdKhachHang { get; set; }

@@ -40,9 +40,9 @@ namespace DuAn1_Coffe.BLL.Service
             }
         }
 
-        public List<SanPham> Timkiem(string name)
+        public List<SanPham> Timkiem(string ma)
         {
-            return SanPhamRepositori.FindName(name);
+            return SanPhamRepositori.FindName(ma);
         }
         public SanPham Findid(int id)
         {

@@ -34,9 +34,9 @@ namespace DuAn1_Coffe.DAL.Repstory
             return true;
         }
 
-        public List<KhachHang> FindName(string name)
+        public List<KhachHang> FindName(string ma)
         {
-            return db.KhachHangs.Where(x => x.TenKh.ToLower().Contains(name.ToLower())).ToList();
+            return db.KhachHangs.Where(x => x.MaKh.ToLower().Contains(ma.ToLower())).ToList();
         }
     }
 }

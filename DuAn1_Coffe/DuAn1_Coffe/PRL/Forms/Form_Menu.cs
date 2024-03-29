@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,6 +22,7 @@ namespace DuAn1_Coffe.PRL.Forms
     {
         HoaDonSer _ser = new HoaDonSer();
         int stt = 0;
+
         public Form_Menu()
         {
             InitializeComponent();
@@ -60,7 +62,6 @@ namespace DuAn1_Coffe.PRL.Forms
             {
                 return;
             }
-
             var danhSachKM = _ser.GetAllKM();
             cbbgiamgia.Items.Clear();
             DateTime ngayHienTai = DateTime.Now;
@@ -70,11 +71,13 @@ namespace DuAn1_Coffe.PRL.Forms
                 if (tongTien >= km.DonHangToiThieu && ngayHienTai < km.NgayKetThuc)
                 {
                     cbbgiamgia.Items.Add(km);
+                    cbbgiamgia.ValueMember = "Id";
+                    cbbgiamgia.DisplayMember = "MaGiamGia";
                 }
-            }
-            if (cbbgiamgia.Items.Count > 0)
-            {
-                cbbgiamgia.SelectedIndex = 0;
+                if (cbbgiamgia.Items.Count > 0)
+                {
+                    cbbgiamgia.SelectedIndex = 0;
+                }
             }
         }
         // sử lý tiếp giảm giá
@@ -82,20 +85,18 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             if (cbbgiamgia.SelectedItem != null)
             {
-                string magiam = cbbgiamgia.SelectedItem.ToString();
-                int giamToiDa = 0;
-                var giamGia = _ser.GetAllKM().FirstOrDefault(x => x.MaGiamGia == magiam);
-
-                if (giamGia != null)
+                // Lấy đối tượng GiamGia được chọn
+                var giamGia = (GiamGium)cbbgiamgia.SelectedItem;
+                int giamToiDa = giamGia.GiamToiDa;
+                double tongTien;
+                if (double.TryParse(txttongtien.Text, out tongTien))
                 {
-                    giamToiDa = giamGia.GiamToiDa;
-                    // Tính toán giá sau khi giảm giá
-                    double tongTien;
-                    if (double.TryParse(txttongtien.Text, out tongTien))
-                    {
-                        double sauGiam = tongTien - giamToiDa;
-                        txtsaugiamgia.Text = sauGiam.ToString();
-                    }
+                    double sauGiam = tongTien - giamToiDa;
+                    txtsaugiamgia.Text = sauGiam.ToString();
+                }
+                else
+                {
+                    txtsaugiamgia.Text = "0";
                 }
             }
         }
@@ -115,7 +116,7 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvsanpham.Columns[6].Name = "Trang Thái";
             dgvsanpham.Columns[7].Name = "Mô Tả";
             dgvsanpham.Columns[8].Name = "Hình Ảnh";
-            //dgvsanpham.Columns[1].Visible = false;
+            dgvsanpham.Columns[1].Visible = false;
 
             foreach (var item in _ser.GetAllSP())
             {
@@ -168,7 +169,7 @@ namespace DuAn1_Coffe.PRL.Forms
                 hdct.SoLuong = soLuong;
                 hdct.TongGia = double.Parse(selectedRow.Cells["Giá Bán"].Value.ToString()) * soLuong;
                 hdct.IdSanPham = int.Parse(selectedRow.Cells["Id"].Value.ToString());
-                hdct.IdHoaDon1 = Convert.ToInt32(txtIdHoaDon.Text);
+                hdct.IdHoaDon1 = int.Parse(txtIdHoaDon.Text);
                 hdcts.Add(hdct);
                 _ser.AddHDChiTiet(hdct);
                 LoatHoaDonCt();
@@ -193,6 +194,7 @@ namespace DuAn1_Coffe.PRL.Forms
 
             txttongtien.Text = tongTien.ToString();
         }
+     
 
         List<HoaDonChiTiet> hdcts = new List<HoaDonChiTiet>();
         public void LoatHoaDonCt()
@@ -205,7 +207,7 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvhoadonct.Columns[4].Name = "Sô Lượng";
             dgvhoadonct.Columns[5].Name = "Giá";
             dgvhoadonct.Columns[6].Name = "Id San phẩm";
-            dgvhoadonct.Columns[7].Name = "Id Hoa Đơn";
+            dgvhoadonct.Columns[7].Name = "IdHD";
 
             // lấy ra lis hóa đơn chi tiết vừa tạo
             foreach (var x in hdcts)
@@ -245,7 +247,7 @@ namespace DuAn1_Coffe.PRL.Forms
             rowData[1] = "".ToString();
             rowData[2] = maHD.ToString();
             rowData[3] = DateTime.Now.ToString();
-            rowData[4] = "Đang chờ";
+            rowData[4] = "Chưa Thanh Toán";
             rowData[5] = cbbnguoitao.SelectedValue.ToString();
             rowData[5] = "";
             rows.Add(rowData);
@@ -259,7 +261,7 @@ namespace DuAn1_Coffe.PRL.Forms
             HoaDon hd = new HoaDon();
             hd.MaHd = maHD;
             hd.NgayMuaHang = DateTime.Now;
-            hd.TrangThai = "Đang Chờ";
+            hd.TrangThai = "Chưa Thanh Toán";
             hd.NguoiTao = cbbnguoitao.SelectedValue.ToString();
             // cái này là bị ép buộc làm.
             hd.IdKhachHang = int.Parse(cboid.SelectedValue.ToString());
@@ -288,42 +290,49 @@ namespace DuAn1_Coffe.PRL.Forms
         // thêm và sửa 2 em liên tiếp(khách hàng, hóa đơn)
         private void btn_thanhtoan_Click(object sender, EventArgs e)
         {
-            int id = Convert.ToInt32(txtIdHoaDon.Text);
-            // Sửa trạng thái của hóa đơn vừa tạo
-            HoaDon hd = new HoaDon();
-            hd.TrangThai = "Đã thanh toán";
-            _ser.UpdateHD(id, hd);          
-
+            string tienthua = txttienthua.Text;
             // thêm khách hàng
-            string ma;
-            var makh = _ser.GetAllKH();
-            int count = makh.Count + 1;
-            ma = "KH" + count;
-            while (makh.Any(x => x.MaKh == ma))
+            if (!string.IsNullOrEmpty(tienthua) && double.TryParse(tienthua, out double tt) && tt >= 0)
             {
-                count++;
+                string ma;
+                var makh = _ser.GetAllKH();
+                int count = makh.Count + 1;
                 ma = "KH" + count;
-            }
-            // check khách hàng nếu không rõ thông tin
-            KhachHang khs = new KhachHang();
-            khs.MaKh = ma;
-            khs.TenKh = txttenKH.Text == "" ? "không có" : txttenKH.Text;
-            khs.Sdt = txtSDT.Text == "" ? "không rõ" : txtSDT.Text;
-            khs.Diachi = txtdiachi.Text == "" ? "Không rõ" : txtdiachi.Text;
-            _ser.AddKH(khs);
+                while (makh.Any(x => x.MaKh == ma))
+                {
+                    count++;
+                    ma = "KH" + count;
+                }
+                // check khách hàng nếu không rõ thông tin
+                KhachHang khs = new KhachHang();
+                khs.MaKh = ma;
+                khs.TenKh = txttenKH.Text == "" ? "không có" : txttenKH.Text;
+                khs.Sdt = txtSDT.Text == "" ? "không rõ" : txtSDT.Text;
+                khs.Diachi = txtdiachi.Text == "" ? "Không rõ" : txtdiachi.Text;
+                _ser.AddKH(khs);
 
-            // cập nhập ghi chú cho hóa đơn 
-            string mahd = txtmahoadon.Text;
-            string ghichu = txtGhiChu.Text;
-            // Lấy danh sách các hóa đơn có cùng mã
-            var listHoaDon = _ser.GetAllHoadonChiTiet().Where(hd => hd.MaHoaDon == mahd).ToList();
-            // Cập nhật thông tin cho từng hóa đơn
-            foreach (var hoaDon in listHoaDon)
-            {
-                hoaDon.Ghichu = ghichu;
-                _ser.UpdateHDCT(hoaDon); 
+                // cập nhập ghi chú cho hóa đơn 
+                string mahd = txtmahoadon.Text;
+                string ghichu = txtGhiChu.Text;
+                var listHoaDon = _ser.GetAllHoadonChiTiet().Where(hd => hd.MaHoaDon == mahd).ToList();
+                foreach (var hoaDon in listHoaDon)
+                {
+                    hoaDon.Ghichu = ghichu;
+                    _ser.UpdateHDCT(hoaDon);
+                }
+
+                // sửa trạng thái hóa đơn
+                int id = Convert.ToInt32(txtIdHoaDon.Text);
+                int idkh = _ser.GetAllKH().Max(x => x.Id);
+                HoaDon hd = new HoaDon();
+                hd.TrangThai = "Đã thanh toán";
+                hd.IdKhachHang = idkh;
+                _ser.UpdateHD(id, hd);
+                dgvhoadonct.Columns.Clear();
+                MessageBox.Show("Thành công");
+                return;
             }
-            MessageBox.Show("Thành công");
+            MessageBox.Show("Thanh Toán chưa đúng");
         }
 
         private void txttienkhachtra_TextChanged(object sender, EventArgs e)
@@ -392,78 +401,82 @@ namespace DuAn1_Coffe.PRL.Forms
         private void Form_Menu_Load(object sender, EventArgs e)
         {
             //lấy danh sách các thiết bị view đang được kết nối với máy tính
-            //camCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            //foreach (FilterInfo item in camCollection)
-            //{
-            //    cbo_Cam.Items.Add(item.Name);
-            //}
-            //cbo_Cam.SelectedIndex = 0;// chọn thiết bị có chỉ số đầu tiên trong danh sách
+            camCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            foreach (FilterInfo item in camCollection)
+            {
+                cbo_Cam.Items.Add(item.Name);
+            }
+            cbo_Cam.SelectedIndex = 0;// chọn thiết bị có chỉ số đầu tiên trong danh sách
         }
 
-        //FilterInfoCollection camCollection; // danh sách các cam của máy
-        //VideoCaptureDevice videoCaptureDevice;
-        //int done = 0; // kiểm tra khi quét thành công
 
+
+        FilterInfoCollection camCollection; // danh sách các cam của máy
+        VideoCaptureDevice videoCaptureDevice;
+        bool scanning = false;
 
         private void VideoCaptureDevice_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
         {
-            ////ptb_Image.Image = (Bitmap)eventArgs.Frame.Clone();
-            //Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
-            //BarcodeReader barcodeReader = new BarcodeReader(); // tạo đối tượng dọc
-            //var result = barcodeReader.Decode(bitmap); // đọc QR code từ hình ảnh
-            //if (barcodeReader != null)
-            //{
-            //    txt_DocMaQR.Invoke(new MethodInvoker(delegate ()
-            //    {
-            //        txt_DocMaQR.Text = result.ToString(); // hiển thị kết quả lên textbox
-            //    }
-            //    ));
-            //}
-            //ptb_Image.Image = bitmap; // hiển thị hình ảnh lên picturebox
-
+            if (scanning)
+            {
+                ptb_Image.Image = (Bitmap)eventArgs.Frame.Clone();
+            }
         }
 
         private void btn_batcam_Click(object sender, EventArgs e)
         {
-            // Cho phép load tất cả các cam có thể lên trên Combobox
-            //videoCaptureDevice = new VideoCaptureDevice(camCollection[cbo_Cam.SelectedIndex].MonikerString);
-            //videoCaptureDevice.NewFrame += VideoCaptureDevice_NewFrame;
-            //videoCaptureDevice.Start(); // Khởi chạy
-            //// Đọc QR code
-            //timer1.Start();
-            //if (done == 1)
-            //{
-            //    timer1.Stop();
-            //}
+            if (!scanning)
+            {
+                videoCaptureDevice = new VideoCaptureDevice(camCollection[cbo_Cam.SelectedIndex].MonikerString);
+                videoCaptureDevice.NewFrame += new AForge.Video.NewFrameEventHandler(VideoCaptureDevice_NewFrame);
+                videoCaptureDevice.Start();
+                scanning = true;
+                timer1.Start();
+            }
         }
 
         private void btn_tatcam_Click(object sender, EventArgs e)
         {
-            //if (videoCaptureDevice! == null)
-            //{
-            //    if (videoCaptureDevice.IsRunning)
-            //    {
-            //        videoCaptureDevice.Stop();
-            //        ptb_Image.Image = null;
-            //    }
-            //}
+            try
+            {
+                if (videoCaptureDevice != null)
+                {
+                    if (videoCaptureDevice.IsRunning)
+                    {
+                        videoCaptureDevice.SignalToStop();
+                        videoCaptureDevice.WaitForStop();
+                        ptb_Image.Image = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Đã xảy ra lỗi khi dừng camera: " + ex.Message);
+            }
         }
 
         private void Form_Menu_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //videoCaptureDevice.SignalToStop();
-            //videoCaptureDevice.NewFrame -= VideoCaptureDevice_NewFrame;
-            //videoCaptureDevice = null;
-            ////if (videoCaptureDevice! == null)
-            ////{
-            ////    if (videoCaptureDevice.IsRunning)
-            ////    {
-            ////        videoCaptureDevice.Stop();
-            ////        ptb_Image.Image = null;
-            ////    }
-            ////}
+            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
+            {
+                videoCaptureDevice.Stop();
+            }
         }
-
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (scanning && ptb_Image.Image != null)
+            {
+                BarcodeReader reader = new BarcodeReader();
+                Result result = reader.Decode((Bitmap)ptb_Image.Image);
+                if (result != null)
+                {
+                    string decoded = result.Text.Trim();
+                    MessageBox.Show(decoded, "Kết quả");
+                    timer1.Stop(); // Dừng timer sau khi quét thành công
+                    scanning = false; // Đặt biến scanning về false để ngăn quét tiếp
+                }
+            }
+        }
 
         // xóa sản phẩm đã chọn khi dã thêm vào giỏ hàng
         private void btn_Xoasp_Click(object sender, EventArgs e)
@@ -506,26 +519,7 @@ namespace DuAn1_Coffe.PRL.Forms
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            //if (ptb_Image.Image != null)
-            //{
-            //    var reader = new BarcodeReader();
-            //    // Anhr trên máy
-            //    var image = Image.FromFile(@"C:\Users\Acer\Desktop\bao.png");
-            //    var result = reader.Decode((Bitmap)ptb_Image.Image);
-            //    // Lấy ảnh từ picturebox
-            //    if (result != null)
-            //    {
-            //        MessageBox.Show(result.ToString());
-            //        done = 1;
-            //        //ptb_Image = null;
-            //        videoCaptureDevice.SignalToStop();
-            //        videoCaptureDevice.NewFrame -= VideoCaptureDevice_NewFrame;
-            //        videoCaptureDevice = null;
-            //    }
-            //}
-        }
+       
 
         // lấy ra sản phẩm chưa thanh toán
         private void LoadDanhSachHoaDon()
@@ -558,7 +552,7 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvhoadonct.Columns[2].Name = "MaHD";
             dgvhoadonct.Columns[3].Name = "tên SP";
             dgvhoadonct.Columns[4].Name = "Sô Lượng";
-            dgvhoadonct.Columns[5].Name = "Giá";
+            dgvhoadonct.Columns[5].Name = "Thành Tiền";
             dgvhoadonct.Columns[6].Name = "Id San phẩm";
             dgvhoadonct.Columns[7].Name = "Id Hoa Đơn";
             dgvhoadonct.Columns[8].Name = "Id Giam gia";
@@ -582,6 +576,11 @@ namespace DuAn1_Coffe.PRL.Forms
                 txtIdHoaDon.Text = idHoaDon;
                 Loathdct(maHoaDon);
             }
+        }
+
+        private void ptb_Image_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

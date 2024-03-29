@@ -28,7 +28,7 @@ namespace DuAn1_Coffe.DAL.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server= MYDESTOP\\SQLEXPRESS01;Database=DB_QuanLy_Caffee;Trusted_Connection=True; TrustServerCertificate =True");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-7KKDTTL\\SQLEXPRESS;Database=DB_QuanLy_Caffee;Trusted_Connection=True; TrustServerCertificate =True");
             }
         }
 
@@ -50,7 +50,7 @@ namespace DuAn1_Coffe.DAL.Models
             modelBuilder.Entity<HoaDon>(entity =>
             {
                 entity.HasKey(e => e.IdHd)
-                    .HasName("PK__HoaDon__16EC3947A53BC345");
+                    .HasName("PK__HoaDon__16EC3947546F11FD");
 
                 entity.ToTable("HoaDon");
 
@@ -84,7 +84,7 @@ namespace DuAn1_Coffe.DAL.Models
             modelBuilder.Entity<HoaDonChiTiet>(entity =>
             {
                 entity.HasKey(e => e.IdHoaDon)
-                    .HasName("PK__HoaDonCh__4DD461C820B7CCDD");
+                    .HasName("PK__HoaDonCh__4DD461C8953D8E18");
 
                 entity.ToTable("HoaDonChiTiet");
 

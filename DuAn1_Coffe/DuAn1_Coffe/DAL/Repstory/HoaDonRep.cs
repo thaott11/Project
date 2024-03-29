@@ -170,5 +170,13 @@ namespace DuAn1_Coffe.DAL.Repstory
             return db.GiamGia.ToList();
             
         }
+
+        public bool Xoa(int id, HoaDon hoaDon)
+        {
+            var xoa = db.HoaDons.FirstOrDefault(x => x.IdHd == id);
+            db.HoaDons.Remove(xoa);
+            db.SaveChanges();
+            return true;
+        }
     }
 }
