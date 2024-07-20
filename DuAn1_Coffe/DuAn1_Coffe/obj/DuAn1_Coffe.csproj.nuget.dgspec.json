@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\fpt fpolytechnic\\học kỳ 4\\Block2\\Demo Moi\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj": {}
+    "D:\\TaiLieu_FPT\\DuAn1\\Du_An_1_CaFe\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj": {}
   },
   "projects": {
-    "E:\\fpt fpolytechnic\\học kỳ 4\\Block2\\Demo Moi\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj": {
+    "D:\\TaiLieu_FPT\\DuAn1\\Du_An_1_CaFe\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\fpt fpolytechnic\\học kỳ 4\\Block2\\Demo Moi\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj",
+        "projectUniqueName": "D:\\TaiLieu_FPT\\DuAn1\\Du_An_1_CaFe\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj",
         "projectName": "DuAn1_Coffe",
-        "projectPath": "E:\\fpt fpolytechnic\\học kỳ 4\\Block2\\Demo Moi\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "E:\\fpt fpolytechnic\\học kỳ 4\\Block2\\Demo Moi\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\obj\\",
+        "projectPath": "D:\\TaiLieu_FPT\\DuAn1\\Du_An_1_CaFe\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\DuAn1_Coffe.csproj",
+        "packagesPath": "C:\\Users\\Thaott\\.nuget\\packages\\",
+        "outputPath": "D:\\TaiLieu_FPT\\DuAn1\\Du_An_1_CaFe\\thaott23\\DuAn1_Coffe\\DuAn1_Coffe\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Thaott\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -38,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -52,9 +53,17 @@
               "target": "Package",
               "version": "[2.2.5, )"
             },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.102.2, )"
+            },
             "EPPlus": {
               "target": "Package",
               "version": "[7.0.0, )"
+            },
+            "Guna.UI2.WinForms": {
+              "target": "Package",
+              "version": "[2.0.4.6, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -98,7 +107,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

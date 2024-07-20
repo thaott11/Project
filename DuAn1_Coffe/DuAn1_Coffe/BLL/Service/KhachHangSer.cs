@@ -1,4 +1,5 @@
-﻿using DuAn1_Coffe.DAL.Models;
+﻿
+using DuAn1_Coffe.DAL.Models;
 using DuAn1_Coffe.DAL.Repstory;
 using System;
 using System.Collections.Generic;
@@ -41,9 +42,9 @@ namespace DuAn1_Coffe.BLL.Service
             }
         }
 
-        public List<KhachHang> Timkiem(string ma)
+        public List<KhachHang> Timkiem(string name)
         {
-            return KhachHangRepositoti.FindName(ma);
+            return KhachHangRepositoti.FindName(name);
         }
     }
 }

@@ -58,6 +58,7 @@
             label2 = new Label();
             panel1 = new Panel();
             label1 = new Label();
+            btn_All = new Button();
             panel7.SuspendLayout();
             tabControl1.SuspendLayout();
             tabPage3.SuspendLayout();
@@ -92,7 +93,7 @@
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Font = new Font("Times New Roman", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
+            tabControl1.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -102,9 +103,9 @@
             // tabPage3
             // 
             tabPage3.Controls.Add(dgvdoanhthusp);
-            tabPage3.Location = new Point(4, 34);
+            tabPage3.Location = new Point(4, 35);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(1528, 288);
+            tabPage3.Size = new Size(1528, 287);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Doanh thu sản phẩm";
             tabPage3.UseVisualStyleBackColor = true;
@@ -118,17 +119,17 @@
             dgvdoanhthusp.Location = new Point(0, 0);
             dgvdoanhthusp.Name = "dgvdoanhthusp";
             dgvdoanhthusp.RowHeadersWidth = 51;
-            dgvdoanhthusp.RowTemplate.Height = 29;
-            dgvdoanhthusp.Size = new Size(1528, 288);
+            dgvdoanhthusp.RowTemplate.Height = 80;
+            dgvdoanhthusp.Size = new Size(1528, 287);
             dgvdoanhthusp.TabIndex = 0;
             // 
             // tabPage2
             // 
             tabPage2.Controls.Add(dgvsphethang);
-            tabPage2.Location = new Point(4, 34);
+            tabPage2.Location = new Point(4, 35);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(1528, 288);
+            tabPage2.Size = new Size(1528, 287);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Danh sách sản phẩm sắp hết hàng";
             tabPage2.UseVisualStyleBackColor = true;
@@ -142,17 +143,17 @@
             dgvsphethang.Location = new Point(3, 3);
             dgvsphethang.Name = "dgvsphethang";
             dgvsphethang.RowHeadersWidth = 51;
-            dgvsphethang.RowTemplate.Height = 29;
-            dgvsphethang.Size = new Size(1522, 282);
+            dgvsphethang.RowTemplate.Height = 80;
+            dgvsphethang.Size = new Size(1522, 281);
             dgvsphethang.TabIndex = 0;
             // 
             // tabPage1
             // 
             tabPage1.Controls.Add(dgvspbanchay);
-            tabPage1.Location = new Point(4, 34);
+            tabPage1.Location = new Point(4, 35);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(1528, 288);
+            tabPage1.Size = new Size(1528, 287);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Danh sách sản phẩm bán chạy";
             tabPage1.UseVisualStyleBackColor = true;
@@ -166,12 +167,13 @@
             dgvspbanchay.Location = new Point(3, 3);
             dgvspbanchay.Name = "dgvspbanchay";
             dgvspbanchay.RowHeadersWidth = 51;
-            dgvspbanchay.RowTemplate.Height = 29;
-            dgvspbanchay.Size = new Size(1522, 282);
+            dgvspbanchay.RowTemplate.Height = 80;
+            dgvspbanchay.Size = new Size(1522, 281);
             dgvspbanchay.TabIndex = 0;
             // 
             // panel6
             // 
+            panel6.Controls.Add(btn_All);
             panel6.Controls.Add(btnThongKe);
             panel6.Controls.Add(dtpDenNgay);
             panel6.Controls.Add(dtptungay);
@@ -189,7 +191,7 @@
             // 
             btnThongKe.BackColor = Color.DarkCyan;
             btnThongKe.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            btnThongKe.Location = new Point(1203, 22);
+            btnThongKe.Location = new Point(1203, 29);
             btnThongKe.Name = "btnThongKe";
             btnThongKe.Size = new Size(131, 58);
             btnThongKe.TabIndex = 9;
@@ -401,6 +403,18 @@
             label1.TabIndex = 1;
             label1.Text = "Thống kê";
             // 
+            // btn_All
+            // 
+            btn_All.BackColor = Color.DarkCyan;
+            btn_All.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            btn_All.Location = new Point(1365, 29);
+            btn_All.Name = "btn_All";
+            btn_All.Size = new Size(131, 58);
+            btn_All.TabIndex = 10;
+            btn_All.Text = "All";
+            btn_All.UseVisualStyleBackColor = false;
+            btn_All.Click += btn_All_Click;
+            // 
             // Form_ThongKe
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -471,5 +485,6 @@
         private Label label2;
         private Panel panel1;
         private Label label1;
+        private Button btn_All;
     }
 }

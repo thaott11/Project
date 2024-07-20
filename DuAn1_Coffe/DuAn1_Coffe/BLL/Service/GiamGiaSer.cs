@@ -1,4 +1,5 @@
-﻿using DuAn1_Coffe.DAL.Models;
+﻿
+using DuAn1_Coffe.DAL.Models;
 using DuAn1_Coffe.DAL.Repstory;
 using System;
 using System.Collections.Generic;
@@ -29,19 +30,32 @@ namespace DuAn1_Coffe.BLL.Service
         }
         public string Sua(int? id, GiamGium giamGium)
         {
-            if (GiamGiaRepositori.GetThem(giamGium))
+            if (GiamGiaRepositori.GetSua(id, giamGium))
             {
-                return "Thêm thành công";
+                return "sửa thành công";
             }
             else
             {
-                return "Thêm thất bại";
+                return "sửa thất bại";
             }
         }
 
         public List<GiamGium> TimkiemMa(string ma)
         {
             return GiamGiaRepositori.FindMa(ma);
+        }
+        public double GetTiLeGiamGia(string maGiamGia)
+        {
+            // Gọi phương thức từ repository để lấy tỉ lệ giảm giá từ cơ sở dữ liệu
+            return GiamGiaRepositori.GetTiLeGiamGia(maGiamGia);
+        }
+        public double GetGiamToiDa(string maGiamGia)
+        {
+            return GiamGiaRepositori.GetGiamToiDa(maGiamGia);
+        }
+        public void UpdateMaGiamGia(GiamGium giamgia)
+        {
+            GiamGiaRepositori.UpdateMaGiamGia(giamgia);
         }
     }
 }

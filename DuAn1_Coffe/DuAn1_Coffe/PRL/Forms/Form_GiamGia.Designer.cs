@@ -106,7 +106,7 @@
             // 
             // dtpNgayBatDau
             // 
-            dtpNgayBatDau.CustomFormat = "dd-MM-yyyy";
+            dtpNgayBatDau.CustomFormat = "dd/MM/yyyy";
             dtpNgayBatDau.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             dtpNgayBatDau.Format = DateTimePickerFormat.Custom;
             dtpNgayBatDau.Location = new Point(264, 106);
@@ -166,7 +166,7 @@
             // 
             // dtpNgayKetThuc
             // 
-            dtpNgayKetThuc.CustomFormat = "dd-MM-yyyy";
+            dtpNgayKetThuc.CustomFormat = "dd/MM/yyyy";
             dtpNgayKetThuc.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             dtpNgayKetThuc.Format = DateTimePickerFormat.Custom;
             dtpNgayKetThuc.Location = new Point(264, 180);
@@ -263,15 +263,16 @@
             // dgvgiamgia
             // 
             dgvgiamgia.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvgiamgia.BackgroundColor = SystemColors.Control;
             dgvgiamgia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvgiamgia.Dock = DockStyle.Fill;
             dgvgiamgia.Location = new Point(0, 60);
             dgvgiamgia.Name = "dgvgiamgia";
             dgvgiamgia.RowHeadersWidth = 51;
+            dgvgiamgia.RowTemplate.Height = 80;
             dgvgiamgia.Size = new Size(1526, 229);
             dgvgiamgia.TabIndex = 1;
             dgvgiamgia.CellClick += dgvgiamgia_CellClick;
-     
             // 
             // groupBox1
             // 
@@ -296,6 +297,7 @@
             // 
             // panel1
             // 
+            panel1.BackColor = Color.PaleTurquoise;
             panel1.Controls.Add(btn_Reset);
             panel1.Controls.Add(btn_Load);
             panel1.Controls.Add(btn_suaGG);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,6 +42,8 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvgiamgia.Columns[7].Name = "Giảm tối đa";
             dgvgiamgia.Columns[8].Name = "Số Lượng";
 
+            dgvgiamgia.Columns[3].DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgvgiamgia.Columns[4].DefaultCellStyle.Format = "dd/MM/yyyy";
             dgvgiamgia.Columns[0].Visible = false;
 
             foreach (var item in GiamGiaService.AllGiamGia())
@@ -50,6 +53,7 @@ namespace DuAn1_Coffe.PRL.Forms
         }
         private void dgvgiamgia_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 // Get the selected row
@@ -57,6 +61,7 @@ namespace DuAn1_Coffe.PRL.Forms
 
                 // Set textbox values based on the selected row
                 idwhenclick = int.Parse(dgvgiamgia.CurrentRow.Cells[0].Value.ToString());
+                txtMaGiamGia.ReadOnly = true;
                 txtMaGiamGia.Text = selectedRow.Cells[2].Value.ToString();
                 dtpNgayBatDau.Value = Convert.ToDateTime(selectedRow.Cells[3].Value);
                 dtpNgayKetThuc.Value = Convert.ToDateTime(selectedRow.Cells[4].Value);
@@ -64,6 +69,7 @@ namespace DuAn1_Coffe.PRL.Forms
                 txtDonToiThieu.Text = selectedRow.Cells[6].Value.ToString();
                 txtGiamToiDa.Text = selectedRow.Cells[7].Value.ToString();
                 txtSoLuong.Text = selectedRow.Cells[8].Value.ToString();
+                txtMaGiamGia.ReadOnly = true;
             }
         }
         public bool CheckGiagiam(string gia)
@@ -74,13 +80,27 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             return Regex.IsMatch(Mess, @"^\d+$");
         }
+
+        public bool checkngay(string mess)
+        {
+            return Regex.IsMatch(mess, @"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/((19|20)\d\d)\s*((0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/((19|20)\d\d))$");
+        }
         private void btn_themGG_Click(object sender, EventArgs e)
         {
             try
             {
+                bool check = GiamGiaService.AllGiamGia().Any(x => x.MaGiamGia.ToLower() == txtMaGiamGia.Text);
                 if (string.IsNullOrEmpty(txtMaGiamGia.Text))
                 {
-                    MessageBox.Show("Không được để trống mã giảm giá", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không được để trống mã giảm giá");
+                }
+                else if (check)
+                {
+                    MessageBox.Show("Mã đã tồn tại");
+                }
+                else if (DateTime.ParseExact(dtpNgayKetThuc.Text.Trim(), "dd/MM/yyyy", null) <= DateTime.ParseExact(dtpNgayBatDau.Text.Trim(), "dd/MM/yyyy", null))
+                {
+                    MessageBox.Show("Ngày bắt đầu <= Ngày kết thúc");
                 }
                 else if(!CheckGiagiam(txtTiLeGiam.Text))
                 {
@@ -111,21 +131,15 @@ namespace DuAn1_Coffe.PRL.Forms
                     MessageBox.Show("Nhập sai định dạng! nhập lại", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
-                {
-                    bool check = GiamGiaService.AllGiamGia().Any(x => x.MaGiamGia == txtMaGiamGia.Text);
-                    if (check)
-                    {
-                        MessageBox.Show("Mã đã tồn tại");
-                    }
-                    else
+
                     {
                         DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                         if (dr == DialogResult.Yes)
                         {
                             GiamGium giamGia = new GiamGium();
                             giamGia.MaGiamGia = txtMaGiamGia.Text;
-                            giamGia.NgayBatDau = Convert.ToDateTime(dtpNgayBatDau.Value.ToString());
-                            giamGia.NgayKetThuc = Convert.ToDateTime(dtpNgayKetThuc.Value.ToString());
+                            giamGia.NgayBatDau = DateTime.ParseExact(dtpNgayBatDau.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            giamGia.NgayKetThuc = DateTime.ParseExact(dtpNgayKetThuc.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                             giamGia.TiLeGiam = int.Parse(txtTiLeGiam.Text);
                             giamGia.DonHangToiThieu = int.Parse(txtDonToiThieu.Text);
                             giamGia.GiamToiDa = int.Parse(txtGiamToiDa.Text);
@@ -134,7 +148,6 @@ namespace DuAn1_Coffe.PRL.Forms
                             LoadDataGG();
                         }
                     }
-                }
             }
             catch (Exception ex)
             {
@@ -186,7 +199,7 @@ namespace DuAn1_Coffe.PRL.Forms
                         GiamGium giamGia = new GiamGium();
                         giamGia.MaGiamGia = txtMaGiamGia.Text;
                         giamGia.NgayBatDau = DateTime.ParseExact(dtpNgayBatDau.Text.Trim(), "dd/MM/yyyy", null);
-                        giamGia.NgayKetThuc = DateTime.ParseExact(dtpNgayKetThuc.Text.Trim(), "dd/MM/yyyy", null);
+                        giamGia.NgayKetThuc = DateTime.ParseExact(dtpNgayKetThuc.Text.Trim() + " 23:59:59", "dd/MM/yyyy HH:mm:ss", null);
                         giamGia.TiLeGiam = int.Parse(txtTiLeGiam.Text);
                         giamGia.DonHangToiThieu = int.Parse(txtDonToiThieu.Text);
                         giamGia.GiamToiDa = int.Parse(txtGiamToiDa.Text);
@@ -210,6 +223,7 @@ namespace DuAn1_Coffe.PRL.Forms
         private void btn_Reset_Click(object sender, EventArgs e)
         {
             txtMaGiamGia.Text = "";
+            txtMaGiamGia.ReadOnly = false;
             dtpNgayBatDau.Value = DateTime.Now;
             dtpNgayKetThuc.Value = DateTime.Now;
             txtTiLeGiam.Text = "";
@@ -243,9 +257,5 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             Timkiem(txtTimKiem.Text);
         }
-
-
-
-  
     }
 }

@@ -97,19 +97,39 @@ namespace DuAn1_Coffe.PRL.Forms
         }
         public bool Checksdt(string mess)
         {
-            return Regex.IsMatch(mess, @"^\d{10}$");
+            return Regex.IsMatch(mess, @"^(03|09)\d{8}$");
         }
         // check CCCD 12 số
         public bool Checkcccd(string mess)
         {
             return Regex.IsMatch(mess, @"^\d{12}$");
         }
+        public bool Checkten(string mess)
+        {
+            return Regex.IsMatch(mess, @"^[a-zA-Z].{1,50}$");
+        }
+        public bool CheckTkmk(string mess)
+        {
+            return Regex.IsMatch(mess, @"^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d].{1,50}$");
+        }
         private void btn_themNV_Click(object sender, EventArgs e)
         {
-
-            if (string.IsNullOrEmpty(txttenNV.Text))
+            bool check = NhanVienService.AllNhanVien().Any(x => x.MaNv == txtmanv.Text);
+            if (string.IsNullOrEmpty(txtmanv.Text))
+            {
+                MessageBox.Show("Không được để trống mã NV");
+            }
+            else if (check)
+            {
+                MessageBox.Show("Mã đã tồn tại");
+            }
+            else if (string.IsNullOrEmpty(txttenNV.Text))
             {
                 MessageBox.Show("Bạn chưa nhập tên nhân viên", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if(!Checkten(txttenNV.Text))
+            {
+                MessageBox.Show("Nhập tên sai định dạng");
             }
             else if (string.IsNullOrEmpty(txtSDT.Text))
             {
@@ -131,26 +151,40 @@ namespace DuAn1_Coffe.PRL.Forms
             {
                 MessageBox.Show("Chưa đúng số cccd", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            else if (rdoNam.Checked == false && rdonu.Checked == false)
+            {
+                MessageBox.Show("Bạn chưa chọn giới tính", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             else if (string.IsNullOrEmpty(txttentk.Text))
             {
                 MessageBox.Show("Bạn chưa nhập tên tài khoản", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!CheckTkmk(txttentk.Text))
+            {
+                MessageBox.Show("Tên tài khoản không đúng định dạng");
             }
             else if (string.IsNullOrEmpty(txtmatkhau.Text))
             {
                 MessageBox.Show("Bạn chưa nhập mật khẩu", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            else if (rdoquanly.Checked == false && rdoquanly.Checked == false)
+            {
+                MessageBox.Show("Bạn chưa chọn chức vụ", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (rbtdanglam.Checked == false && rbtnghilam.Checked == false)
+            {
+                MessageBox.Show("Bạn chưa chọn trang thái làm việc", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!CheckTkmk(txtmatkhau.Text))
+            {
+                MessageBox.Show("Mật khẩu chưa đúng định dạng");
+            }
             else if (string.IsNullOrEmpty(pathimg))
             {
                 MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm.", "Thông báo");
             }
-             else{
-                    bool check = NhanVienService.AllNhanVien().Any(x => x.MaNv == txtmanv.Text);
-                    if (check)
-                    {
-                        MessageBox.Show("Mã đã tồn tại");
-                    }
-                    else
-                    {
+            else
+               {
                         DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                         if (dr == DialogResult.Yes)
                         {
@@ -172,7 +206,6 @@ namespace DuAn1_Coffe.PRL.Forms
                             MessageBox.Show(NhanVienService.Them(nhanVien));
                             LoadData();
                         }
-                    }
                 }
             }
 
@@ -180,10 +213,22 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             try
             {
-
-                if (string.IsNullOrEmpty(txttenNV.Text))
+                bool check = NhanVienService.AllNhanVien().Any(x => x.MaNv.ToLower() == txtmanv.Text);
+                if (string.IsNullOrEmpty(txtmanv.Text))
+                {
+                    MessageBox.Show("Bạn chưa nhập mã NV");
+                }
+                else if (check)
+                {
+                    MessageBox.Show("Mã NV đã tồn tại");
+                }
+                else if (string.IsNullOrEmpty(txttenNV.Text.Trim()))
                 {
                     MessageBox.Show("Bạn chưa nhập tên nhân viên", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkten(txttenNV.Text))
+                {
+                    MessageBox.Show("Nhập tên sai định dạng");
                 }
                 else if (string.IsNullOrEmpty(txtSDT.Text))
                 {
@@ -209,9 +254,17 @@ namespace DuAn1_Coffe.PRL.Forms
                 {
                     MessageBox.Show("Bạn chưa nhập tên tài khoản", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else if (!CheckTkmk(txttentk.Text))
+                {
+                    MessageBox.Show("Tên tài khoản không đúng định dạng");
+                }
                 else if (string.IsNullOrEmpty(txtmatkhau.Text))
                 {
                     MessageBox.Show("Bạn chưa nhập mật khẩu", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!CheckTkmk(txtmatkhau.Text))
+                {
+                    MessageBox.Show("Mật khẩu chưa đúng định dạng");
                 }
                 else
                 {
@@ -252,6 +305,7 @@ namespace DuAn1_Coffe.PRL.Forms
         private void btn_Reset_Click(object sender, EventArgs e)
         {
             txtmanv.ResetText();
+            txtmanv.ReadOnly = false;
             txttenNV.ResetText();
             txtSDT.ResetText();
             txtdiachi.ResetText();
@@ -308,9 +362,10 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             int d = e.RowIndex;
             idwhenclick = int.Parse(dgvnhanvien.Rows[d].Cells[0].Value.ToString());
+            txtmanv.ReadOnly = true;
             txtmanv.Text = dgvnhanvien.Rows[d].Cells[2].Value.ToString();
             txttenNV.Text = dgvnhanvien.Rows[d].Cells[3].Value.ToString();
-
+          
             if (dgvnhanvien.Rows[d].Cells[4].Value.ToString().Equals("Nam"))
             {
                 rdoNam.Checked = true;

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_QuanLyHoaDon));
             groupBox2 = new GroupBox();
             dgvhoadonchitiet = new DataGridView();
             groupBox1 = new GroupBox();
@@ -44,7 +45,6 @@
             label2 = new Label();
             dtpTu = new DateTimePicker();
             label1 = new Label();
-            button1 = new Button();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvhoadonchitiet).BeginInit();
             groupBox1.SuspendLayout();
@@ -56,10 +56,10 @@
             // 
             groupBox2.Controls.Add(dgvhoadonchitiet);
             groupBox2.Dock = DockStyle.Fill;
-            groupBox2.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            groupBox2.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox2.Location = new Point(0, 712);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(1454, 22);
+            groupBox2.Size = new Size(1454, 102);
             groupBox2.TabIndex = 5;
             groupBox2.TabStop = false;
             groupBox2.Text = "Hóa Đơn Chi tiết";
@@ -67,19 +67,20 @@
             // dgvhoadonchitiet
             // 
             dgvhoadonchitiet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvhoadonchitiet.BackgroundColor = SystemColors.Control;
             dgvhoadonchitiet.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvhoadonchitiet.Dock = DockStyle.Fill;
             dgvhoadonchitiet.Location = new Point(3, 26);
             dgvhoadonchitiet.Name = "dgvhoadonchitiet";
             dgvhoadonchitiet.RowHeadersWidth = 51;
-            dgvhoadonchitiet.Size = new Size(1448, 0);
+            dgvhoadonchitiet.Size = new Size(1448, 73);
             dgvhoadonchitiet.TabIndex = 0;
             // 
             // groupBox1
             // 
             groupBox1.Controls.Add(dgvhoadon);
             groupBox1.Dock = DockStyle.Top;
-            groupBox1.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            groupBox1.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox1.Location = new Point(0, 282);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(1454, 430);
@@ -96,6 +97,7 @@
             dgvhoadon.Location = new Point(3, 26);
             dgvhoadon.Name = "dgvhoadon";
             dgvhoadon.RowHeadersWidth = 51;
+            dgvhoadon.RowTemplate.Height = 80;
             dgvhoadon.Size = new Size(1448, 401);
             dgvhoadon.TabIndex = 0;
             dgvhoadon.CellDoubleClick += dgvhoadon_CellDoubleClick;
@@ -103,7 +105,6 @@
             // panel1
             // 
             panel1.BackColor = Color.Linen;
-            panel1.Controls.Add(button1);
             panel1.Controls.Add(btn_load);
             panel1.Controls.Add(txttimkiemnguoitao);
             panel1.Controls.Add(label4);
@@ -120,15 +121,17 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1454, 282);
             panel1.TabIndex = 3;
+            panel1.Paint += panel1_Paint;
             // 
             // btn_load
             // 
-            btn_load.BackColor = Color.MediumTurquoise;
-            btn_load.Location = new Point(930, 121);
+            btn_load.BackColor = Color.White;
+            btn_load.BackgroundImage = (Image)resources.GetObject("btn_load.BackgroundImage");
+            btn_load.BackgroundImageLayout = ImageLayout.Zoom;
+            btn_load.Location = new Point(1120, 155);
             btn_load.Name = "btn_load";
-            btn_load.Size = new Size(97, 51);
+            btn_load.Size = new Size(70, 57);
             btn_load.TabIndex = 59;
-            btn_load.Text = "Load";
             btn_load.UseVisualStyleBackColor = false;
             btn_load.Click += btn_load_Click;
             // 
@@ -177,7 +180,7 @@
             cbolochoadon.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
             cbolochoadon.FormattingEnabled = true;
             cbolochoadon.Items.AddRange(new object[] { "Đã thanh toán", "Chưa Thanh Toán" });
-            cbolochoadon.Location = new Point(560, 129);
+            cbolochoadon.Location = new Point(639, 129);
             cbolochoadon.Name = "cbolochoadon";
             cbolochoadon.Size = new Size(250, 34);
             cbolochoadon.TabIndex = 15;
@@ -186,13 +189,14 @@
             // 
             // btn_timNgay
             // 
-            btn_timNgay.BackColor = Color.MediumTurquoise;
+            btn_timNgay.BackColor = Color.White;
+            btn_timNgay.BackgroundImage = (Image)resources.GetObject("btn_timNgay.BackgroundImage");
+            btn_timNgay.BackgroundImageLayout = ImageLayout.Zoom;
             btn_timNgay.ForeColor = SystemColors.ActiveCaptionText;
-            btn_timNgay.Location = new Point(930, 45);
+            btn_timNgay.Location = new Point(1120, 56);
             btn_timNgay.Name = "btn_timNgay";
-            btn_timNgay.Size = new Size(98, 50);
+            btn_timNgay.Size = new Size(70, 62);
             btn_timNgay.TabIndex = 14;
-            btn_timNgay.Text = "Tìm";
             btn_timNgay.UseVisualStyleBackColor = false;
             btn_timNgay.Click += btn_timNgay_Click;
             // 
@@ -201,7 +205,7 @@
             dtpDen.CustomFormat = "dd/MM/yyyy";
             dtpDen.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
             dtpDen.Format = DateTimePickerFormat.Custom;
-            dtpDen.Location = new Point(560, 54);
+            dtpDen.Location = new Point(639, 56);
             dtpDen.Name = "dtpDen";
             dtpDen.Size = new Size(250, 34);
             dtpDen.TabIndex = 13;
@@ -210,7 +214,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(490, 57);
+            label2.Location = new Point(479, 57);
             label2.Name = "label2";
             label2.Size = new Size(55, 31);
             label2.TabIndex = 12;
@@ -236,27 +240,18 @@
             label1.TabIndex = 10;
             label1.Text = "Từ";
             // 
-            // button1
-            // 
-            button1.Location = new Point(1246, 107);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 54);
-            button1.TabIndex = 60;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // Form_QuanLyHoaDon
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1454, 734);
+            ClientSize = new Size(1454, 814);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(panel1);
             Margin = new Padding(2);
             Name = "Form_QuanLyHoaDon";
             Text = "Form_QuanLyHoaDon";
+            Load += Form_QuanLyHoaDon_Load;
             groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvhoadonchitiet).EndInit();
             groupBox1.ResumeLayout(false);
@@ -284,6 +279,5 @@
         private Label label2;
         private DateTimePicker dtpTu;
         private Label label1;
-        private Button button1;
     }
 }

@@ -107,87 +107,100 @@ namespace DuAn1_Coffe.PRL.Forms
         }
         private void btn_themDU_Click(object sender, EventArgs e)
         {
-                if(string.IsNullOrEmpty(txttensp.Text))
+            bool check = sanPhamService.Allsanpham().Any(x => x.MaSp == txtmasp.Text);
+            if (string.IsNullOrEmpty(txtmasp.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập mã sản phẩm");
+            }
+            else if (check)
+            {
+                MessageBox.Show("Mã đã tồn tại");
+            }
+            else if (string.IsNullOrEmpty(txttensp.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập tên sản phẩm", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txtdongia.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập đơn giá", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!Checkint(txtdongia.Text))
+            {
+                MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(txtsoluong.Text))
+            {
+                MessageBox.Show("Bạn chưa nhập số lượng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!Checkint(txtsoluong.Text))
+            {
+                MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (string.IsNullOrEmpty(lbtrangthai.Text))
+            {
+                MessageBox.Show("Bạn chưa chọn trạng thái");
+            }
+            else if (string.IsNullOrEmpty(pathimg))
+            {
+                MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm", "Thông báo");
+            }
+            else
+            {
+                DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                if (dr == DialogResult.Yes)
                 {
-                    MessageBox.Show("Bạn chưa nhập tên sản phẩm","Thông báo",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    byte[] imageBytes = File.ReadAllBytes(pathimg);
+                    SanPham sanPham = new SanPham();
+                    sanPham.MaSp = txtmasp.Text;
+                    sanPham.TenSanPham = txttensp.Text;
+                    sanPham.DonGia = Convert.ToInt32(txtdongia.Text);
+                    sanPham.SoLuong = Convert.ToInt32(txtsoluong.Text);
+                    sanPham.MoTa = txtmotaDU.Text;
+                    sanPham.TrangThai = rbtdangbanDU.Checked ? "Đang Bán" : "Ngừng Bán";
+                    sanPham.HinhAnh = imageBytes;
+                    MessageBox.Show(sanPhamService.Them(sanPham));
+                    LoadData();
                 }
-                else if (string.IsNullOrEmpty(txtdongia.Text))
-                {
-                    MessageBox.Show("Bạn chưa nhập đơn giá", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (!Checkint(txtdongia.Text))
-                {
-                    MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (string.IsNullOrEmpty(txtsoluong.Text))
-                {
-                    MessageBox.Show("Bạn chưa nhập số lượng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (!Checkint(txtsoluong.Text))
-                {
-                    MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (string.IsNullOrEmpty(pathimg))
-                {
-                     MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm", "Thông báo");
-                }
-                else
-                {
-                bool check = sanPhamService.Allsanpham().Any(x => x.MaSp == txtmasp.Text);
-                if (check)
-                {
-                    MessageBox.Show("Mã đã tồn tại");
-                }
-                else
-                {
-                    DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                    if (dr == DialogResult.Yes)
-                    {
-                        byte[] imageBytes = File.ReadAllBytes(pathimg);
-                        SanPham sanPham = new SanPham();
-                        sanPham.MaSp = txtmasp.Text;
-                        sanPham.TenSanPham = txttensp.Text;
-                        sanPham.DonGia = Convert.ToInt32(txtdongia.Text);
-                        sanPham.SoLuong = Convert.ToInt32(txtsoluong.Text);
-                        sanPham.MoTa = txtmotaDU.Text;
-                        sanPham.TrangThai = rbtdangbanDU.Checked ? "Đang Bán" : "Ngừng Bán";
-                        sanPham.HinhAnh = imageBytes;
-                        MessageBox.Show(sanPhamService.Them(sanPham));
-                        LoadData();
-                    }
-                }
-            }               
+            }
+                       
         }
 
         private void btn_suaDU_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("Bạn có muốn Sửa không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-            if (dr == DialogResult.Yes)
+            if (!Checkint(txtdongia.Text))
             {
-                SanPham sanPham = new SanPham();
-                if (pathimg != null)
-                {
-                    byte[] imageBytes = File.ReadAllBytes(pathimg);
-                    sanPham.HinhAnh = imageBytes;
-                }
-                else
-                    sanPham.HinhAnh = imgLoad;
-                sanPham.MaSp = txtmasp.Text;
-                sanPham.TenSanPham = txttensp.Text;
-                sanPham.DonGia = Convert.ToInt32(txtdongia.Text);
-                sanPham.SoLuong = Convert.ToInt32(txtsoluong.Text);
-                sanPham.MoTa = txtmotaDU.Text;
-                sanPham.TrangThai = rbtdangbanDU.Checked ? "Đang Bán" : "Ngừng Bán";
-                MessageBox.Show(sanPhamService.Sua(idWhenclick, sanPham));
-                LoadData();
+                MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!Checkint(txtsoluong.Text))
+            {
+                MessageBox.Show("Thứ bạn nhập không phải là số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn một hình ảnh trước khi thêm sản phẩm.", "Thông báo");
+                DialogResult dr = MessageBox.Show("Bạn có muốn Sửa không", "thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                if (dr == DialogResult.Yes)
+                {
+                    SanPham sanPham = new SanPham();
+                    if (pathimg != null)
+                    {
+                        byte[] imageBytes = File.ReadAllBytes(pathimg);
+                        sanPham.HinhAnh = imageBytes;
+                    }
+                    else
+                        sanPham.HinhAnh = imgLoad;
+                    sanPham.MaSp = txtmasp.Text;
+                    sanPham.TenSanPham = txttensp.Text;
+                    sanPham.DonGia = Convert.ToInt32(txtdongia.Text);
+                    sanPham.SoLuong = Convert.ToInt32(txtsoluong.Text);
+                    sanPham.MoTa = txtmotaDU.Text;
+                    sanPham.TrangThai = rbtdangbanDU.Checked ? "Đang Bán" : "Ngừng Bán";
+                    MessageBox.Show(sanPhamService.Sua(idWhenclick, sanPham));
+                    LoadData();
+                }
             }
         }
 
-        public void TimKiem(string ma)
+        public void TimKiem(string name)
         {
             int stt = 1;
             dgvsanpham.ColumnCount = 9;
@@ -202,7 +215,7 @@ namespace DuAn1_Coffe.PRL.Forms
             dgvsanpham.Columns[7].Name = "Mô Tả";
             dgvsanpham.Columns[8].Name = "Hình Ảnh";
             dgvsanpham.Columns[0].Visible = false;
-            foreach (var item in sanPhamService.Timkiem(ma))
+            foreach (var item in sanPhamService.Timkiem(name))
             {
                 dgvsanpham.Rows.Add(item.Id, stt++, item.MaSp, item.TenSanPham, item.DonGia, item.SoLuong, item.TrangThai, item.MoTa, item.HinhAnh);
             }
@@ -215,6 +228,7 @@ namespace DuAn1_Coffe.PRL.Forms
         private void btn_Reset_Click(object sender, EventArgs e)
         {
             txtmasp.ResetText();
+            txtmasp.ReadOnly = false;
             txttensp.ResetText();
             txtdongia.ResetText();
             txtsoluong.ResetText();
@@ -266,6 +280,7 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             int d = e.RowIndex;
             idWhenclick = int.Parse(dgvsanpham.Rows[d].Cells[0].Value.ToString());
+            txtmasp.ReadOnly = true;
             txtmasp.Text = dgvsanpham.Rows[d].Cells[2].Value.ToString();
             txttensp.Text = dgvsanpham.Rows[d].Cells[3].Value.ToString();
             txtdongia.Text = dgvsanpham.Rows[d].Cells[4].Value.ToString();

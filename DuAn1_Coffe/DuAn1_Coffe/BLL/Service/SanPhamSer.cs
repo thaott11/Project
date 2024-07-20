@@ -1,4 +1,5 @@
-﻿using DuAn1_Coffe.DAL.Models;
+﻿
+using DuAn1_Coffe.DAL.Models;
 using DuAn1_Coffe.DAL.Repstory;
 using System;
 using System.Collections.Generic;
@@ -40,9 +41,9 @@ namespace DuAn1_Coffe.BLL.Service
             }
         }
 
-        public List<SanPham> Timkiem(string ma)
+        public List<SanPham> Timkiem(string name)
         {
-            return SanPhamRepositori.FindName(ma);
+            return SanPhamRepositori.FindName(name);
         }
         public SanPham Findid(int id)
         {
@@ -52,6 +53,24 @@ namespace DuAn1_Coffe.BLL.Service
         public List<SanPham> Loc(string trangthai)
         {
             return SanPhamRepositori.Loc(trangthai);
+        }
+        public string UpdateSP(int id, SanPham sanPham)
+        {
+            SanPhamRepositori.UpdateSanPham(id, sanPham);
+            return "Thêm thành công";
+        }
+        public string updateSL(int id, int sl)
+        {
+            SanPham upSPCT = SanPhamRepositori.findbyID(id);
+            upSPCT.SoLuong = sl;
+            if (SanPhamRepositori.UpdateSPCTRes(upSPCT))
+            {
+                return "Cap nhat so luong thanh cong";
+            }
+            else
+            {
+                return "Cap nhat so luong that bai";
+            }
         }
     }
 }

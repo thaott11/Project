@@ -7,7 +7,7 @@ namespace DuAn1_Coffe.DAL.Models
     {
         public GiamGium()
         {
-            HoaDonChiTiets = new HashSet<HoaDonChiTiet>();
+            HoaDons = new HashSet<HoaDon>();
         }
 
         public int Id { get; set; }
@@ -19,6 +19,6 @@ namespace DuAn1_Coffe.DAL.Models
         public int GiamToiDa { get; set; }
         public int SoLuong { get; set; }
 
-        public virtual ICollection<HoaDonChiTiet> HoaDonChiTiets { get; set; }
+        public virtual ICollection<HoaDon> HoaDons { get; set; }
     }
 }

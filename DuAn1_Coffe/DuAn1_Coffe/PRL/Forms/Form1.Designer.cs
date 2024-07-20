@@ -28,21 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             bt_dn = new Button();
             tb_mk = new TextBox();
             tb_tk = new TextBox();
             button1 = new Button();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
+            txtpass = new TextBox();
+            txtuser = new TextBox();
             SuspendLayout();
             // 
             // bt_dn
             // 
             bt_dn.BackColor = Color.MediumSeaGreen;
-            bt_dn.Location = new Point(442, 496);
-            bt_dn.Margin = new Padding(5, 6, 5, 6);
+            bt_dn.Location = new Point(272, 310);
+            bt_dn.Margin = new Padding(3, 4, 3, 4);
             bt_dn.Name = "bt_dn";
-            bt_dn.Size = new Size(185, 85);
+            bt_dn.Size = new Size(114, 53);
             bt_dn.TabIndex = 13;
             bt_dn.Text = "Đăng Nhập";
             bt_dn.UseVisualStyleBackColor = false;
@@ -50,68 +51,71 @@
             // tb_mk
             // 
             tb_mk.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-            tb_mk.Location = new Point(231, 354);
-            tb_mk.Margin = new Padding(5, 6, 5, 6);
+            tb_mk.Location = new Point(142, 221);
+            tb_mk.Margin = new Padding(3, 4, 3, 4);
             tb_mk.Name = "tb_mk";
             tb_mk.PasswordChar = '●';
             tb_mk.PlaceholderText = "Password";
-            tb_mk.Size = new Size(639, 50);
+            tb_mk.Size = new Size(395, 34);
             tb_mk.TabIndex = 12;
             // 
             // tb_tk
             // 
             tb_tk.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-            tb_tk.Location = new Point(231, 191);
-            tb_tk.Margin = new Padding(5, 6, 5, 6);
+            tb_tk.Location = new Point(142, 119);
+            tb_tk.Margin = new Padding(3, 4, 3, 4);
             tb_tk.Name = "tb_tk";
             tb_tk.PlaceholderText = "UserName";
-            tb_tk.Size = new Size(639, 50);
+            tb_tk.Size = new Size(395, 34);
             tb_tk.TabIndex = 11;
             // 
             // button1
             // 
             button1.BackColor = Color.MediumSeaGreen;
-            button1.Location = new Point(442, 496);
-            button1.Margin = new Padding(5, 6, 5, 6);
+            button1.Location = new Point(272, 310);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(185, 85);
+            button1.Size = new Size(114, 53);
             button1.TabIndex = 16;
             button1.Text = "Đăng Nhập";
             button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
             // 
-            // textBox1
+            // txtpass
             // 
-            textBox1.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-            textBox1.Location = new Point(231, 354);
-            textBox1.Margin = new Padding(5, 6, 5, 6);
-            textBox1.Name = "textBox1";
-            textBox1.PasswordChar = '●';
-            textBox1.PlaceholderText = "Password";
-            textBox1.Size = new Size(639, 50);
-            textBox1.TabIndex = 15;
+            txtpass.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
+            txtpass.Location = new Point(142, 221);
+            txtpass.Margin = new Padding(3, 4, 3, 4);
+            txtpass.Name = "txtpass";
+            txtpass.PasswordChar = '●';
+            txtpass.PlaceholderText = "Password";
+            txtpass.Size = new Size(395, 34);
+            txtpass.TabIndex = 15;
             // 
-            // textBox2
+            // txtuser
             // 
-            textBox2.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-            textBox2.Location = new Point(231, 191);
-            textBox2.Margin = new Padding(5, 6, 5, 6);
-            textBox2.Name = "textBox2";
-            textBox2.PlaceholderText = "UserName";
-            textBox2.Size = new Size(639, 50);
-            textBox2.TabIndex = 14;
+            txtuser.Font = new Font("Times New Roman", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
+            txtuser.Location = new Point(142, 119);
+            txtuser.Margin = new Padding(3, 4, 3, 4);
+            txtuser.Name = "txtuser";
+            txtuser.PlaceholderText = "UserName";
+            txtuser.Size = new Size(395, 34);
+            txtuser.TabIndex = 14;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1100, 773);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(677, 483);
             Controls.Add(button1);
-            Controls.Add(textBox1);
-            Controls.Add(textBox2);
+            Controls.Add(txtpass);
+            Controls.Add(txtuser);
             Controls.Add(bt_dn);
             Controls.Add(tb_mk);
             Controls.Add(tb_tk);
+            Margin = new Padding(2);
             Name = "Form1";
             Text = "Form1";
             ResumeLayout(false);
@@ -124,7 +128,7 @@
         private TextBox tb_mk;
         private TextBox tb_tk;
         private Button button1;
-        private TextBox textBox1;
-        private TextBox textBox2;
+        private TextBox txtpass;
+        private TextBox txtuser;
     }
 }

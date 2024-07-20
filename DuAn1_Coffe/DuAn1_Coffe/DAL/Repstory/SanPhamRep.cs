@@ -1,4 +1,5 @@
-﻿using DuAn1_Coffe.DAL.Models;
+﻿
+using DuAn1_Coffe.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +38,18 @@ namespace DuAn1_Coffe.DAL.Repstory
             db.SaveChanges();
             return true;
         }
-
-        public List<SanPham> FindName(string ma)
+        public bool UpdateSanPham(int id, SanPham sanPham)
         {
-            return db.SanPhams.Where(x => x.MaSp.ToLower().Contains(ma.ToLower())).ToList();
+            var update = db.SanPhams.FirstOrDefault(x => x.Id == id);
+            update.SoLuong = sanPham.SoLuong;
+            db.SanPhams.Update(update);
+            db.SaveChanges();
+            return true;
+        }
+    
+        public List<SanPham> FindName(string name)
+        {
+            return db.SanPhams.Where(x => x.TenSanPham.ToLower().Contains(name.ToLower())).ToList();
         }
         public SanPham Findid(int id)
         {
@@ -50,6 +59,22 @@ namespace DuAn1_Coffe.DAL.Repstory
         public List<SanPham> Loc(string trangthai)
         {
             return db.SanPhams.Where(x => x.TrangThai == trangthai).ToList();
+        }
+        public SanPham findbyID(int id)
+        {
+            return db.SanPhams.FirstOrDefault(x => x.Id == id);
+        }
+        public bool UpdateSPCTRes(SanPham sanPham)
+        {
+            if (sanPham != null)
+            {
+                db.SanPhams.Update(sanPham);
+                return db.SaveChanges() > 0;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

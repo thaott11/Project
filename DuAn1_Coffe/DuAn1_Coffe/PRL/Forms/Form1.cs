@@ -1,4 +1,4 @@
-using DuAn1_Coffe.BLL.Service;
+﻿using DuAn1_Coffe.BLL.Service;
 using DuAn1_Coffe.DAL.Models;
 using DuAn1_Coffe.PRL.Forms;
 
@@ -14,20 +14,20 @@ namespace DuAn1_Coffe
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string taikhoan = tb_tk.Text;
-            string matkhau = tb_mk.Text;
+            string taikhoan = txtuser.Text;
+            string matkhau = txtpass.Text;
             NhanVien user;
             if (AccountService.Taikhoans(taikhoan, matkhau, out user))
             {
-                if (user.VaiTro == "Qu?n l�")
+                if (user.VaiTro == "Quản lý")
                 {
-                    // M? form d�nh cho qu?n l�
+                    // M? form dành cho qu?n lý
                     Form_TrangChu trangchu = new Form_TrangChu();
                     trangchu.Show();
                 }
                 else
                 {
-                    // M? form d�nh cho nh�n vi�n
+                    // M? form dành cho nhân viên
                     Form_NhanVien trang_NhanVien = new Form_NhanVien();
                     trang_NhanVien.Show();
                 }
@@ -36,7 +36,7 @@ namespace DuAn1_Coffe
             }
             else
             {
-                MessageBox.Show("T�n ??ng nh?p ho?c m?t kh?u kh�ng ?�ng!", "L?i ??ng nh?p", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

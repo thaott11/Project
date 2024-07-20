@@ -1,5 +1,4 @@
 ﻿using DuAn1_Coffe.BLL.Service;
-using DuAn1_Coffe.DAL.Models;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
@@ -15,10 +14,11 @@ namespace DuAn1_Coffe.PRL.Forms
 {
     public partial class Form_ThongKe : Form
     {
+
         SanPhamSer SanPhamService = new SanPhamSer();
         HoaDonChiTietSer HoaDonChiTietSer = new HoaDonChiTietSer();
         KhachHangSer KhachHangSer = new KhachHangSer();
-        HoaDonSer HoaDonSer = new HoaDonSer();
+        HoaDonService HoaDonService = new HoaDonService();
         public Form_ThongKe()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace DuAn1_Coffe.PRL.Forms
 
         private void Form_ThongKe_Load(object sender, EventArgs e)
         {
-            LoadDoanhthuSp();
+            //LoadDoanhthuSp();
         }
         public void LoadDoanhthuSp()
         {
@@ -45,25 +45,31 @@ namespace DuAn1_Coffe.PRL.Forms
             foreach (var item in HoaDonChiTietSer.AllHoadonchitiet())
             {
 
-                var hd = HoaDonSer.GetAllHD().FirstOrDefault(x => x.IdHd == item.IdHoaDon);
-                dgvdoanhthusp.Rows.Add(item.IdHoaDon, stt++, item.MaHoaDon, item.TenSanPham, item.SoLuong, item.TongGia, item.Ghichu);
+                //var hd = HoaDonService.GetAllHoaDonrv().FirstOrDefault(x => x.Id == item.IdHoaDon);
+                dgvdoanhthusp.Rows.Add(item.Id, stt++, item.MaHoaDon, item.TenSanPham, item.SoLuong, item.ThanhTien, item.Ghichu);
             }
-            lbdoanhthu.Text = HoaDonChiTietSer.AllHoadonchitiet().Sum(x => x.TongGia).ToString();
+            lbdoanhthu.Text = HoaDonChiTietSer.AllHoadonchitiet().Sum(x => x.ThanhTien).ToString();
+            lbtongdonhang.Text = HoaDonChiTietSer.AllHoadonchitiet().Count().ToString();
+            lbspban.Text = HoaDonChiTietSer.AllHoadonchitiet().Sum(x => x.SoLuong).ToString();
+        }
+        private void btn_All_Click(object sender, EventArgs e)
+        {
+            LoadDoanhthuSp();
         }
         public void ThongKeSanPhamBanChay(DateTime ngayBatDau, DateTime ngayKetThuc)
         {
             int index = 0;
             var thongkesanpham = (from hct in HoaDonChiTietSer.AllHoadonchitiet()
-                                  join hd in HoaDonSer.GetAllHD() on hct.IdHoaDon equals hd.IdHd
+                                  join hd in HoaDonService.GetAllHoaDonrv() on hct.IdHoaDon equals hd.Id
                                   where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
                                   group hct by hct.IdSanPham into g
                                   select new
                                   {
                                       Masanpham = g.Key,
                                       TenSP = g.Select(x => x.TenSanPham).FirstOrDefault(),
-                                      GiaBan = g.Select(x => x.TongGia).FirstOrDefault(),
+                                      GiaBan = g.Select(x => x.Gia).FirstOrDefault(),
                                       SoLuotMua = g.Sum(x => x.SoLuong),
-                                      TongTien = g.Sum(x => x.SoLuong * x.TongGia),
+                                      TongTien = g.Sum(x => x.SoLuong * x.Gia),
                                   }).OrderByDescending(x => x.SoLuotMua).ToList();
             dgvspbanchay.DataSource = thongkesanpham;
             dgvspbanchay.Columns[0].HeaderText = "Mã Sp";
@@ -103,6 +109,10 @@ namespace DuAn1_Coffe.PRL.Forms
                 dgvsphethang.Columns[6].HeaderText = "Trạng thái";
                 dgvsphethang.Columns[7].HeaderText = "Mô tả";
                 dgvsphethang.Columns[8].HeaderText = "Hình ảnh";
+                DataGridViewImageColumn pic = new DataGridViewImageColumn();
+                pic = (DataGridViewImageColumn)dgvsphethang.Columns[8];
+                pic.ImageLayout = DataGridViewImageCellLayout.Zoom;
+
             }
             catch (Exception ex)
             {
@@ -114,24 +124,30 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             DateTime ngayBatDau = dtptungay.Value.Date; // Lấy chỉ ngày, loại bỏ thông tin về giờ, phút và giây
             DateTime ngayKetThuc = dtpDenNgay.Value.Date.AddDays(1).AddSeconds(-1); // Lấy ngày kết thúc và đặt giờ, phút và giây về 23:59:59
-
+                                                                                    // Tổng doanh thu
+            var tongDoanhThu = (from hct in HoaDonChiTietSer.AllHoadonchitiet()
+                                join hd in HoaDonService.GetAllHoaDonrv() on hct.IdHoaDon equals hd.Id
+                                where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
+                                select hct.ThanhTien).Sum();
             //Tổng sản phẩm
             var tongsanpham = (from hct in HoaDonChiTietSer.AllHoadonchitiet()
-                               join hd in HoaDonSer.GetAllHD() on hct.IdHoaDon equals hd.IdHd
+                               join hd in HoaDonService.GetAllHoaDonrv() on hct.IdHoaDon equals hd.Id
                                where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
                                select hct.SoLuong).Sum();
 
             //Tổng số đơn hàng 
-            var tongSoDonh = (from hd in HoaDonSer.GetAllHD()
+            var tongSoDonh = (from hd in HoaDonService.GetAllHoaDonrv()
                               where hd.NgayMuaHang >= ngayBatDau && hd.NgayMuaHang <= ngayKetThuc
                               select hd).Count();
 
             //Hiển thị lên lable
-
+            lbdoanhthu.Text = tongDoanhThu.ToString();
             lbspban.Text = tongsanpham.ToString();
             lbtongdonhang.Text = tongSoDonh.ToString();
             ThongKeSanPhamBanChay(ngayBatDau, ngayKetThuc);
             ThongKeSanPhamSapHetHang(ngayBatDau, ngayKetThuc);
         }
+
+     
     }
 }

@@ -1,4 +1,5 @@
-﻿using DuAn1_Coffe.DAL.Models;
+﻿
+using DuAn1_Coffe.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,9 @@ namespace DuAn1_Coffe.DAL.Repstory
             return true;
         }
 
-        public List<KhachHang> FindName(string ma)
+        public List<KhachHang> FindName(string Name)
         {
-            return db.KhachHangs.Where(x => x.MaKh.ToLower().Contains(ma.ToLower())).ToList();
+            return db.KhachHangs.Where(x => x.TenKh.ToLower().Contains(Name.ToLower())).ToList();
         }
     }
 }

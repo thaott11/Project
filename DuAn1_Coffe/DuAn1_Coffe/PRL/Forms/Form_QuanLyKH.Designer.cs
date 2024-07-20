@@ -78,6 +78,7 @@
             dgvkhachhang.Location = new Point(3, 26);
             dgvkhachhang.Name = "dgvkhachhang";
             dgvkhachhang.RowHeadersWidth = 51;
+            dgvkhachhang.RowTemplate.Height = 80;
             dgvkhachhang.Size = new Size(1462, 268);
             dgvkhachhang.TabIndex = 0;
             dgvkhachhang.CellClick += dgvkhachhang_CellClick;
@@ -85,19 +86,20 @@
             // 
             // btn_Reset
             // 
-            btn_Reset.Location = new Point(1339, 275);
+            btn_Reset.BackgroundImage = (Image)resources.GetObject("btn_Reset.BackgroundImage");
+            btn_Reset.BackgroundImageLayout = ImageLayout.Stretch;
+            btn_Reset.Location = new Point(1339, 201);
             btn_Reset.Name = "btn_Reset";
             btn_Reset.Size = new Size(67, 61);
             btn_Reset.TabIndex = 80;
-            btn_Reset.Text = "Reset";
             btn_Reset.UseVisualStyleBackColor = true;
             btn_Reset.Click += btn_Reset_Click;
             // 
             // btn_Load
             // 
             btn_Load.BackgroundImage = (Image)resources.GetObject("btn_Load.BackgroundImage");
-            btn_Load.BackgroundImageLayout = ImageLayout.Zoom;
-            btn_Load.Location = new Point(1339, 194);
+            btn_Load.BackgroundImageLayout = ImageLayout.Stretch;
+            btn_Load.Location = new Point(1341, 291);
             btn_Load.Name = "btn_Load";
             btn_Load.Size = new Size(67, 56);
             btn_Load.TabIndex = 79;
@@ -176,7 +178,7 @@
             // 
             groupBox3.Controls.Add(dgvkhachhang);
             groupBox3.Dock = DockStyle.Fill;
-            groupBox3.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            groupBox3.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox3.Location = new Point(0, 57);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(1468, 297);

@@ -97,7 +97,7 @@
             // 
             groupBox4.Controls.Add(dgvnhanvien);
             groupBox4.Dock = DockStyle.Fill;
-            groupBox4.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            groupBox4.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox4.Location = new Point(0, 54);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(1597, 234);
@@ -114,6 +114,7 @@
             dgvnhanvien.Location = new Point(3, 26);
             dgvnhanvien.Name = "dgvnhanvien";
             dgvnhanvien.RowHeadersWidth = 51;
+            dgvnhanvien.RowTemplate.Height = 80;
             dgvnhanvien.Size = new Size(1591, 205);
             dgvnhanvien.TabIndex = 0;
             dgvnhanvien.CellClick += dgvnhanvien_CellClick;

@@ -13,8 +13,8 @@ namespace DuAn1_Coffe.DAL.Models
         public int Id { get; set; }
         public string MaSp { get; set; } = null!;
         public string TenSanPham { get; set; } = null!;
-        public double? DonGia { get; set; }
-        public int? SoLuong { get; set; }
+        public double DonGia { get; set; }
+        public int SoLuong { get; set; }
         public string? TrangThai { get; set; }
         public string? MoTa { get; set; }
         public byte[]? HinhAnh { get; set; }

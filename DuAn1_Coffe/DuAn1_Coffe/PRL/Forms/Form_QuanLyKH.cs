@@ -46,42 +46,63 @@ namespace DuAn1_Coffe.PRL.Forms
 
         public bool chechMa(string mess)
         {
-            return Regex.IsMatch(mess, @"^[a-zA-Z0-9_-]+$");
+            return Regex.IsMatch(mess, @"^(?=.*[a-zA-Z])(?=.*\d).{1,10}$");
         }
         public bool Checksdt(string mess)
         {
-            return Regex.IsMatch(mess, @"^\d{10}$");
+            return Regex.IsMatch(mess, @"^(03|09)\d{8}$");
+        }
+        public bool Checkten(string mess)
+        {
+            return Regex.IsMatch(mess, @"^.{1,50}$");
         }
 
         private void btn_themKH_Click(object sender, EventArgs e)
         {
             try
             {
+                bool check = KhachHangService.AllKhachHang().Any(x => x.MaKh.ToLower() == txtmakh.Text);
                 if (string.IsNullOrEmpty(txtmakh.Text))
                 {
                     MessageBox.Show("Không được để trống mã khách hàng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else if (!chechMa(txtmakh.Text))
+                {
+                    MessageBox.Show("Mã khách hàng phải chứa cả chữ và số", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (check)
+                {
+                    MessageBox.Show("Mã đã tồn tại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txttenkh.Text))
+                {
+                    MessageBox.Show("Không được để trống tên khách hàng", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checkten(txttenkh.Text))
+                {
+                    MessageBox.Show("Tên khách hàng không quá 50 ký tự", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (string.IsNullOrEmpty(txtsdt.Text))
+                {
+                    MessageBox.Show("Không được để trống số điện thoại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!Checksdt(txtsdt.Text))
+                {
+                    MessageBox.Show("Số điện thoại không đúng định dạng");
+                }
                 else
                 {
-                    bool check = KhachHangService.AllKhachHang().Any(x => x.MaKh == txtmakh.Text);
-                    if (check)
+                    KhachHang khachHang = new KhachHang();
+                    khachHang.MaKh = txtmakh.Text;
+                    khachHang.TenKh = txttenkh.Text;
+                    khachHang.Sdt = txtsdt.Text;
+                    khachHang.Diachi = txtdiachi.Text;
+                    khachHang.GioiTinh = rbtNam.Checked ? "Nam" : "Nữ";
+                    DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    if (dr == DialogResult.Yes)
                     {
-                        MessageBox.Show("Mã đã tồn tại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else
-                    {
-                        KhachHang khachHang = new KhachHang();
-                        khachHang.MaKh = txtmakh.Text;
-                        khachHang.TenKh = txttenkh.Text;
-                        khachHang.Sdt = txtsdt.Text;
-                        khachHang.Diachi = txtdiachi.Text;
-                        khachHang.GioiTinh = rbtNam.Checked ? "Nam" : "Nữ";
-                        DialogResult dr = MessageBox.Show("Bạn có muốn thêm không", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                        if (dr == DialogResult.Yes)
-                        {
-                            KhachHangService.Them(khachHang);
-                            LoadData();
-                        }
+                        KhachHangService.Them(khachHang);
+                        LoadData();
                     }
                 }
             }
@@ -156,6 +177,7 @@ namespace DuAn1_Coffe.PRL.Forms
         private void btn_Reset_Click(object sender, EventArgs e)
         {
             txtmakh.ResetText();
+            txtmakh.ReadOnly = false;
             txttenkh.ResetText();
             txtsdt.ResetText();
             txtdiachi.ResetText();
@@ -167,6 +189,7 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             int d = e.RowIndex;
             idWhenclick = int.Parse(dgvkhachhang.Rows[d].Cells[0].Value.ToString());
+            txtmakh.ReadOnly = true;
             txtmakh.Text = dgvkhachhang.Rows[d].Cells[2].Value.ToString();
             txttenkh.Text = dgvkhachhang.Rows[d].Cells[3].Value.ToString();
             txtsdt.Text = dgvkhachhang.Rows[d].Cells[4].Value.ToString();

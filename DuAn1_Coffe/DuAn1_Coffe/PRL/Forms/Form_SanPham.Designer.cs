@@ -409,7 +409,7 @@
             dgvsanpham.Location = new Point(0, 0);
             dgvsanpham.Name = "dgvsanpham";
             dgvsanpham.RowHeadersWidth = 51;
-            dgvsanpham.RowTemplate.Height = 29;
+            dgvsanpham.RowTemplate.Height = 80;
             dgvsanpham.Size = new Size(1476, 243);
             dgvsanpham.TabIndex = 0;
             dgvsanpham.CellClick += dgvsanpham_CellClick_1;

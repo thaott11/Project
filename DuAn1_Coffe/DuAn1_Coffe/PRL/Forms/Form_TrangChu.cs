@@ -1,5 +1,4 @@
-﻿using DuAn1_Coffe.DAL.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -96,6 +95,11 @@ namespace DuAn1_Coffe.PRL.Forms
         {
             loadform(new Form_ThongKe());
             hideSubMenu();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
